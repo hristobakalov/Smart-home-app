@@ -1,8 +1,16 @@
 module.exports = function(app){
-    var musicians = require('./controllers/musicians');
-    app.get('/musicians', musicians.findAll);
-    app.get('/musicians/:id', musicians.findById);
-    app.post('/musicians', musicians.add);
-    app.put('/musicians/:id', musicians.update);
-    app.delete('/musicians/:id', musicians.delete);
+	//initiallization
+    var users = require('./controllers/users');
+	var roles = require('./controllers/roles');
+	var sensors = require('./controllers/sensors');
+	var relations = require('./controllers/relations');
+	
+	
+	//users
+    app.get('/users', users.findAll);
+    app.get('/users/:id', users.findById);
+    app.post('/users', users.add);
+    app.put('/users/:id', users.update);
+    app.delete('/users/:id', users.delete);
+	app.get('/import', users.import);
 }

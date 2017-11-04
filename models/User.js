@@ -7,7 +7,7 @@ var UserSchema = new Schema({
   FirstName: String,
   LastName: String,
   IsApproved: Boolean,
-  PasswordToken, String
+  PasswordToken: String
 });
 
 mongoose.model('User', UserSchema);
