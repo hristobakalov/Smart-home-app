@@ -14,6 +14,12 @@ exports.findById = function(req, res){
     return res.send(result);
   });
 };
+exports.findByEmail = function(req, res){
+  var email = req.params.email;
+  User.findOne({'Email':email},function(err, result) {
+    return res.send(result);
+  });
+};
 exports.add = function(req, res) {
 	console.log(req.body);
 	var user = new User(req.body);

@@ -14,6 +14,12 @@ exports.findById = function(req, res){
     return res.send(result);
   });
 };
+exports.findByName = function(req, res){
+  var name = req.params.name;
+  Role.findOne({'Name':name},function(err, result) {
+    return res.send(result);
+  });
+};
 exports.add = function(req, res) {
   Role.create(req.body, function (err, role) {
     if (err) return console.log(err);

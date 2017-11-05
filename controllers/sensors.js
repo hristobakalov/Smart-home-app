@@ -14,6 +14,18 @@ exports.findById = function(req, res){
     return res.send(result);
   });
 };
+exports.findByName = function(req, res){
+  var name = req.params.name;
+  Sensor.findOne({'Name':name},function(err, result) {
+    return res.send(result);
+  });
+};
+exports.findByPinNumber = function(req, res){
+  var pinNum = req.params.pinNum;
+  Sensor.findOne({'PinNumber':pinNum},function(err, result) {
+    return res.send(result);
+  });
+};
 exports.add = function(req, res) {
   Sensor.create(req.body, function (err, sensor) {
     if (err) return console.log(err);
@@ -37,7 +49,6 @@ exports.delete = function(req, res){
     return res.send(result);
   });
 };
-
 exports.import = function(req, res){
 	console.log("import initiated");
 	Sensor.create(

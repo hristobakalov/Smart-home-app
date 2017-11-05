@@ -9,6 +9,7 @@ module.exports = function(app){
 	//users
     app.get('/users', users.findAll);
     app.get('/users/:id', users.findById);
+	app.get('/users/:email', users.findByEmail);
     app.post('/users', users.add);
     app.put('/users/:id', users.update);
     app.delete('/users/:id', users.delete);
@@ -18,6 +19,7 @@ module.exports = function(app){
 	//roles
     app.get('/roles', roles.findAll);
     app.get('/roles/:id', roles.findById);
+	app.get('/roles/:name', roles.findByName);
     app.post('/roles', roles.add);
     app.put('/roles/:id', roles.update);
     app.delete('/roles/:id', roles.delete);

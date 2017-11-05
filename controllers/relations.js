@@ -60,7 +60,7 @@ exports.addUserRole = function(req, res) {
     return res.send(userRoleRelations);
   });
 }
-exports.update = function(req, res) {
+exports.updateRoleByUserId = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
 
