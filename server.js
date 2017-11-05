@@ -1,4 +1,5 @@
 var express = require('express'),
+bodyParser = require('body-parser')
 mongoose = require('mongoose'),
 fs = require('fs');
 
@@ -16,6 +17,11 @@ var app = express();
 // app.configure(function(){
 // app.use(express.bodyparser());
 // });
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 //requiring models
 require('./models/Role');
