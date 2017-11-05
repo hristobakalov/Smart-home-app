@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var constants = require('../constants');
+var helpers = require('../utils');
 var connection = mongoose.createConnection(constants.DBUrl);
 
 Sensor = connection.model('Sensor');
@@ -47,6 +48,15 @@ exports.delete = function(req, res){
   var id = req.params.id;
   Sensor.remove({'_id':id},function(result) {
     return res.send(result);
+  });
+};
+exports.SwitchSensor = function(req, res){
+  var pin = req.params.pin;
+  var state = req.params.state;
+  Sensor.findOne({'Name':name},function(result) {
+	  if(!result.IsEnabled) return res.send(202);
+	  
+	  helpers.turn(pin,state);
   });
 };
 exports.import = function(req, res){
