@@ -32,7 +32,9 @@ app.post('/payload', function (req, res) {
 		return res.sendStatus(500);
 	}
 	console.log('kill running server');
-	exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server/server.js\' | awk \'{print $2}\')', execCallback);
+	setTimeout(function(){
+		exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server/server.js\' | awk \'{print $2}\')', execCallback);
+	},1000);
 	// reset any changes that have been made locally
 	exec('git -C ../ reset --hard', execCallback);
 
