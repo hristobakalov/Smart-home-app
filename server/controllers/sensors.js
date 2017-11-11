@@ -52,7 +52,9 @@ exports.delete = function(req, res){
 };
 exports.SwitchSensor = function(req, res){
 	var name = req.body.name;
+	console.log(name);
 	Sensor.findOne({'Name':name},function(err, result) {
+		console.log(result);
 		if(!result.IsEnabled){
 			 var pin = result.PinNameNumber;
 			 var state = req.body.state;
