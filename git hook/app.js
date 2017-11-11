@@ -34,21 +34,21 @@ app.post('/payload', function (req, res) {
 	console.log('kill running server');
 	exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server/server.js\' | awk \'{print $2}\')', execCallback);
 	// reset any changes that have been made locally
-	exec('git -C ../Smart-home-app reset --hard', execCallback);
+	exec('git -C ../ reset --hard', execCallback);
 
 	// and ditch any files that have been added locally too
-	exec('git -C ../Smart-home-app clean -df', execCallback);
+	exec('git -C ../ clean -df', execCallback);
 
 	console.log('pulling code from GitHub...');
 	// now pull down the latest
-	exec('git -C ../Smart-home-app pull -f', execCallback);
+	exec('git -C ../ pull -f', execCallback);
 
 	// and npm install with --production
 	//exec('npm -C ../Smart-home-app install', execCallback);
 
 	console.log('running server');
 	setTimeout(function(){
-		exec('node ../Smart-home-app/server/server.js', execCallback);
+		exec('node ../server/server.js', execCallback);
 	},1000);
 	
 	res.sendStatus(200);
@@ -59,9 +59,9 @@ app.post('/payload', function (req, res) {
 
 app.listen(5000, function () {
 	console.log('listening on port 5000');
-	exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server.js\' | awk \'{print $2}\')', execCallback);
+	exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server/server.js\' | awk \'{print $2}\')', execCallback);
 	setTimeout(function(){
-		exec('node ../Smart-home-app/server/server.js', execCallback);
+		exec('node ../server/server.js', execCallback);
 	},1000);
 	
 	
