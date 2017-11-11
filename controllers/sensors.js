@@ -53,11 +53,13 @@ exports.delete = function(req, res){
 exports.SwitchSensor = function(req, res){
   var pin = req.params.pin;
   var state = req.params.state;
-  Sensor.findOne({'Name':name},function(result) {
-	  if(!result.IsEnabled) return res.send(202);
+	helpers.turn(pin,state);
+  // Sensor.findOne({'Name':name},function(result) {
+	  // if(!result.IsEnabled)
 	  
-	  helpers.turn(pin,state);
-  });
+	  
+  // });
+   return res.send(202);
 };
 exports.import = function(req, res){
 	console.log("import initiated");
