@@ -23,7 +23,7 @@ exports.findByName = function(req, res){
 };
 exports.findByPinNumber = function(req, res){
   var pinNum = req.params.pinNum;
-  Sensor.findOne({'PinNumber':pinNum},function(err, result) {
+  Sensor.findOne({'PinNameNumber':pinNum},function(err, result) {
     return res.send(result);
   });
 };
@@ -51,17 +51,18 @@ exports.delete = function(req, res){
   });
 };
 exports.SwitchSensor = function(req, res){
-  var pin = req.params.pin;
-
-  var state = req.params.state;
-	console.log(state);
-	helpers.turn(pin,state);
-  // Sensor.findOne({'Name':name},function(result) {
-	  // if(!result.IsEnabled)
-	  
-	  
-  // });
-   return res.send(202);
+	var name = req.body.name;
+	Sensor.findOne({'Name':name},function(err, result) {
+		if(!result.IsEnabled){
+			 var pin = result.PinNameNumber;
+			 var state = req.body.state;
+			 helpers.turn(pin,state);
+			 return res.send(202);
+		 }
+		 else{
+			  return res.send(400);
+		 }
+  });
 };
 exports.import = function(req, res){
 	console.log("import initiated");
