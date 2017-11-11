@@ -32,6 +32,7 @@ module.exports = function(app){
     app.put('/sensors/:id', sensors.update);
     app.delete('/sensors/:id', sensors.delete);
 	app.get('/sensors/import', sensors.import);
+	app.get('/sensors/:pin/:state', sensors.SwitchSensor);
 	
 	app.get('/userrolerelations', relations.findAllUserRoleRelations);
 	app.get('/relations/user/:id/role', relations.findRoleByUserId);
