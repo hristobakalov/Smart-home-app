@@ -5,7 +5,7 @@ const exec = require('child_process').execSync;
 // };
 
 function turn (pin, state) {
-    const value = state ? 1 : 0;
+    const value = state == 1 ? 1 : 0;
 	console.log(value);
     exec(`gpio -g mode ${pin} out`);
     return exec(`gpio -g write ${pin} ${value}`);
