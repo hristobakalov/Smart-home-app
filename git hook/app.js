@@ -28,11 +28,11 @@ app.post('/payload', function (req, res) {
 	//verify repository.name == 'wackcoon-device' or repository.full_name = 'DanielEgan/wackcoon-device'
 	console.log(req.body.pusher.name + ' just pushed to ' + req.body.repository.name);
 
-	if(req.body.name !== "Smart-home-app") {
+	if(req.body.repository.name !== "Smart-home-app") {
 		return res.sendStatus(500);
 	}
 	console.log('kill running server');
-	exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server.js\' | awk \'{print $2}\')', execCallback);
+	exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server/server.js\' | awk \'{print $2}\')', execCallback);
 	// reset any changes that have been made locally
 	exec('git -C ../Smart-home-app reset --hard', execCallback);
 
@@ -46,10 +46,10 @@ app.post('/payload', function (req, res) {
 	// and npm install with --production
 	//exec('npm -C ../Smart-home-app install', execCallback);
 
-
-
 	console.log('running server');
-	exec('node ../Smart-home-app/server.js', execCallback);
+	setTimeout(function(){
+		exec('node ../Smart-home-app/server/server.js', execCallback);
+	},1000);
 	
 	res.sendStatus(200);
 	res.end();
@@ -61,7 +61,7 @@ app.listen(5000, function () {
 	console.log('listening on port 5000');
 	exec('kill -9 $(ps aux | grep \'node\ Smart-home-app/server.js\' | awk \'{print $2}\')', execCallback);
 	setTimeout(function(){
-		exec('node ../Smart-home-app/server.js', execCallback);
+		exec('node ../Smart-home-app/server/server.js', execCallback);
 	},1000);
 	
 	
