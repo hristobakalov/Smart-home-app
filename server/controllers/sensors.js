@@ -56,7 +56,7 @@ exports.SwitchSensor = function(req, res){
 	Sensor.findOne({'Name':name},function(err, result) {
 		console.log(result);
 		if(result == null) {return res.send(400);}
-		if(!result.IsEnabled){
+		if(result.IsEnabled){
 			 var pin = result.PinNameNumber;
 			 var state = req.body.state;
 			 helpers.turn(pin,state);
