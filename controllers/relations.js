@@ -116,6 +116,8 @@ exports.addSensorToRole = function(req, res){
   });
 };
 
+
+
 exports.import = function(req, res){
 	console.log("import initiated");
 	UserRoleRelations.create(
