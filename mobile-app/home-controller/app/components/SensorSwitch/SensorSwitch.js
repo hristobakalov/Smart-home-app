@@ -7,7 +7,7 @@ import {
 } 
 from 'react-native'
 
-export default SwitchExample = (props) => {
+export default SensorSwitch = (props) => {
    return (
       <View style = {styles.container}>
 		 <Text>Hello from the other side!</Text>
@@ -31,6 +31,6 @@ const styles = StyleSheet.create ({
    container: {
       flex: 1,
       alignItems: 'center',
-      marginTop: 100
+      marginTop: 50
    }
 })
