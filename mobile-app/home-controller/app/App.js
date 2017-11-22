@@ -8,6 +8,7 @@ import {
 	} from 'react-native';
 import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import UserApi from './lib/apiUser';
+import SensorApi from './lib/apiSensor';
 export default class App extends React.Component {
 	constructor (props){
 		super(props);
@@ -57,8 +58,14 @@ export default class App extends React.Component {
 	}
   render() {
 	  //console.warn(this.state.new_data.Email)
-	 console.warn(this.state.users);
-	 var result = this.state.users.map(a => a.FirstName);
+	 //console.warn(this.state.users);
+	 var sensor = {
+		"name" : "LED Green",
+		"state" : "0"
+	};
+	 SensorApi.switch(sensor).then((res) => {
+			console.log(res);
+		});
 	 // console.warn(JSON.stringify(this.state.users[0].FirstName));
 	 //<Text>{this.state.new_data[0]}</Text>
     return (
