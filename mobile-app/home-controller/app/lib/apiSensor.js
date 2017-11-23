@@ -54,7 +54,7 @@ var apiSensor = {
 		.then((response) => response.json());
 	},
 	switch(sensor){ // need name and state
-	//console.log(sensor);
+	console.log(sensor);
 		return fetch(sensorsApiUrl + 'switch', {
 			method: "POST",
 			headers: {
@@ -64,7 +64,7 @@ var apiSensor = {
 			body: JSON.stringify(sensor)}) 
 		//.then((response) => response.json());
 		.then((response) => response.text())
-		.then((responseData) => {/*console.log(responseData)*/})
+		.then((responseData) => {console.log(responseData)})
 		.catch(function(err) {console.log(err)});
 		
 	}

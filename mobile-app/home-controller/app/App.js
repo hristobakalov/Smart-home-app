@@ -83,11 +83,13 @@ export default class App extends React.Component {
 		this.ws.send(JSON.stringify(props));
 	}
   render() {
+	  const {elements} = this.state;
     return (
 	
 		<View style={styles.container}>
 			
 			<SensorList
+				items = {elements}
 				sensors = {this.state.sensors}
 				switchSensor = {this.switchSensor}
 			/>
