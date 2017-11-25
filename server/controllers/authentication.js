@@ -22,45 +22,56 @@ var auth = {
     }
  
     // Fire a query to your DB and check if the credentials are valid
-    var dbUserObj = auth.validate(username, password);
-	console.log(dbUserObj);
-    if (!dbUserObj) { // If authentication fails, we send a 401 back
-      res.status(401);
-      res.json({
-        "status": 401,
-        "message": "Invalid credentials"
-      });
-      return;
-    }
+    var dbUserObj = auth.validate(username, password, res);
+	
+	// console.log(dbUserObj);
+    // if (!dbUserObj) { // If authentication fails, we send a 401 back
+      // res.status(401);
+      // res.json({
+        // "status": 401,
+        // "message": "Invalid credentials"
+      // });
+      // return;
+    // }
  
-    if (dbUserObj) {
+    // if (dbUserObj) {
  
-      // If authentication is success, we will generate a token
-      // and dispatch it to the client
+      // // If authentication is success, we will generate a token
+      // // and dispatch it to the client
  
-      res.json(genToken(dbUserObj));
-    }
+      // res.json(genToken(dbUserObj));
+    // }
  
   },
  
-  validate: function(username, password) {
-    console.log("validating ", username, password);
-	var user = {};
-	
-	User.findOne({'Email':username},function(err, result) {
+  validate: function(username, password, res) {
+	user = {};
+	User.findOne({'Email':username},function(err, user) {
 			if(err){
 				console.log(err);
+				 res.status(401);
+				res.json({
+					"status": 401,
+					"message": "Invalid credentials"
+				  });
 				return false;
 			}
-			if(!result || password != result.Password)
+			if(!user || password != user.Password)
 			{
+				 res.status(401);
+				res.json({
+					"status": 401,
+					"message": "Invalid credentials"
+				  });
 				return false;
 			}
-			result["Role"] = "Administrator"; //temporary hardcoded role;
-			user = result;
-			console.log(user);
-		});
-		return user;
+			//user ["Role"] = "Administrator"; //temporary hardcoded role;
+			var resultObj = user.toObject();
+				resultObj.Role ="Administrator";
+			  res.json(genToken(resultObj));
+			//console.log(user);
+			return user;
+	});
     // var dbUserObj = { // spoofing a userobject from the DB. 
       // name: 'arvind',
       // role: 'admin',
