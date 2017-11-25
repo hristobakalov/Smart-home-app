@@ -47,7 +47,7 @@ app.all('/*', function(req, res, next) {
 // Any URL's that do not follow the below pattern should be avoided unless you 
 // are sure that authentication is not needed
 app.all('/api/*', [require('./middleware/validateRequest')]);
-app.use('/', require('./routes'));
+// app.use('/', require('./routes'));
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -57,7 +57,7 @@ app.use(function(req, res, next) {
 //requiring models
 
 //requiring routes
-//require('./routes')(app);
+require('./routes')(app);
 
 app.listen(3001);
 console.log('Listening on port 3001...');
