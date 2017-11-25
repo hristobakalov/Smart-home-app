@@ -23,11 +23,17 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+
+
+//requiring models
 require('./models/Role');
 require('./models/Sensor');
 require('./models/User');
 require('./models/UserRoleRelation');
 require('./models/RoleSensorRelation');
+
+//requiring routes
+require('./routes')(app);
 
 app.all('/*', function(req, res, next) {
   // CORS headers
@@ -54,10 +60,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-//requiring models
-
-//requiring routes
-require('./routes')(app);
 
 app.listen(3001);
 console.log('Listening on port 3001...');
