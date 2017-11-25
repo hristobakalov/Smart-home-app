@@ -4,38 +4,41 @@ module.exports = function(app){
 	var roles = require('./controllers/roles');
 	var sensors = require('./controllers/sensors');
 	var relations = require('./controllers/relations');
+	var auth = require('./controllers/authentication');
+	
+	app.post('/login', auth.login);
 	
 	app.get('/', users.connectionCheck);
 	//users
-    app.get('/users', users.findAll);
-    app.get('/users/:id', users.findById);
-	app.get('/users/:email', users.findByEmail);
-    app.post('/users', users.add);
-    app.put('/users/:id', users.update);
-    app.delete('/users/:id', users.delete);
+    app.get('/api/users', users.findAll);
+    app.get('/api/users/:id', users.findById);
+	app.get('/api/users/:email', users.findByEmail);
+    app.post('/api/users', users.add);
+    app.put('/api/users/:id', users.update);
+    app.delete('/api/users/:id', users.delete);
 	
-	app.get('/users/impport', users.import);
+	app.get('/api/users/impport', users.import);
 	
 	//roles
-    app.get('/roles', roles.findAll);
-    app.get('/roles/:id', roles.findById);
-	app.get('/roles/:name', roles.findByName);
-    app.post('/roles', roles.add);
-    app.put('/roles/:id', roles.update);
-    app.delete('/roles/:id', roles.delete);
-	app.get('/roles/import', roles.import);
+    app.get('/api/roles', roles.findAll);
+    app.get('/api/roles/:id', roles.findById);
+	app.get('/api/roles/:name', roles.findByName);
+    app.post('/api/roles', roles.add);
+    app.put('/api/roles/:id', roles.update);
+    app.delete('/api/roles/:id', roles.delete);
+	app.get('/api/roles/import', roles.import);
 	
 	//sensors
-    app.get('/sensors', sensors.findAll);
-    app.get('/sensors/:id', sensors.findById);
-    app.post('/sensors', sensors.add);
-    app.put('/sensors/:id', sensors.update);
-    app.delete('/sensors/:id', sensors.delete);
-	app.get('/sensors/import', sensors.import);
-	app.post('/sensors/switch', sensors.SwitchSensor);
+    app.get('/api/sensors', sensors.findAll);
+    app.get('/api/sensors/:id', sensors.findById);
+    app.post('/api/sensors', sensors.add);
+    app.put('/api/sensors/:id', sensors.update);
+    app.delete('/api/sensors/:id', sensors.delete);
+	app.get('/api/sensors/import', sensors.import);
+	app.post('/api/sensors/switch', sensors.SwitchSensor);
 	
-	app.get('/userrolerelations', relations.findAllUserRoleRelations);
-	app.get('/relations/user/:id/role', relations.findRoleByUserId);
-	app.post('/relations/user/role', relations.addUserRole);
+	app.get('/api/userrolerelations', relations.findAllUserRoleRelations);
+	app.get('/api/relations/user/:id/role', relations.findRoleByUserId);
+	app.post('/api/relations/user/role', relations.addUserRole);
 	
 }

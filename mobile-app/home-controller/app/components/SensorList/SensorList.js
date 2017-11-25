@@ -21,7 +21,7 @@ export default SensorList = (props) => {
 			keyExtractor={(item) => item._id}
 			renderItem ={({item}) =>
 				<View style = {styles.row}>
-					<Text>{item.Name}
+					<Text style={{fontSize: 20}}>{item.Name}
 					</Text>
 					<Switch
 						onValueChange = {() => props.switchSensor(item)}
@@ -37,7 +37,8 @@ const styles = StyleSheet.create ({
    container: {
       flex: 1,
       alignItems: 'center',
-      marginTop: 50
+      marginTop: 50,
+	  
    },
    row:{
 	   flexDirection: 'row',
