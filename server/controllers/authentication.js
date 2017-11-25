@@ -23,7 +23,7 @@ var auth = {
  
     // Fire a query to your DB and check if the credentials are valid
     var dbUserObj = auth.validate(username, password);
-   
+	console.log(dbUserObj);
     if (!dbUserObj) { // If authentication fails, we send a 401 back
       res.status(401);
       res.json({
@@ -44,21 +44,23 @@ var auth = {
   },
  
   validate: function(username, password) {
-    
-	 User.findOne({'Email':username},function(err, result) {
+    console.log("validating ", username, password);
+	var user = {};
+	
+	User.findOne({'Email':username},function(err, result) {
 			if(err){
 				console.log(err);
 				return false;
 			}
-			
-			if(!result || password != result.Password) 
+			if(!result || password != result.Password)
 			{
 				return false;
 			}
 			result["Role"] = "Administrator"; //temporary hardcoded role;
-			return result;
-			
+			user = result;
+			console.log(user);
 		});
+		return user;
     // var dbUserObj = { // spoofing a userobject from the DB. 
       // name: 'arvind',
       // role: 'admin',

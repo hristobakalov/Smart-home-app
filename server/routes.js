@@ -1,11 +1,12 @@
-module.exports = function(app){
+	
 	//initiallization
     var users = require('./controllers/users');
 	var roles = require('./controllers/roles');
 	var sensors = require('./controllers/sensors');
 	var relations = require('./controllers/relations');
 	var auth = require('./controllers/authentication');
-	
+	var express = require('express');
+	var app = express();
 	app.post('/login', auth.login);
 	
 	app.get('/', users.connectionCheck);
@@ -41,4 +42,6 @@ module.exports = function(app){
 	app.get('/api/relations/user/:id/role', relations.findRoleByUserId);
 	app.post('/api/relations/user/role', relations.addUserRole);
 	
-}
+
+
+module.exports = app;
