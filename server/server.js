@@ -23,6 +23,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+require('./models/Role');
+require('./models/Sensor');
+require('./models/User');
+require('./models/UserRoleRelation');
+require('./models/RoleSensorRelation');
+
 app.all('/*', function(req, res, next) {
   // CORS headers
   res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
@@ -40,7 +46,7 @@ app.all('/*', function(req, res, next) {
 // Only the requests that start with /api/v1/* will be checked for the token.
 // Any URL's that do not follow the below pattern should be avoided unless you 
 // are sure that authentication is not needed
-app.all('/api/*', [require('./middlewares/validateRequest')]);
+app.all('/api/*', [require('./middleware/validateRequest')]);
 app.use('/', require('./routes'));
 
 app.use(function(req, res, next) {
@@ -49,11 +55,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 //requiring models
-// require('./models/Role');
-// require('./models/Sensor');
-// require('./models/User');
-// require('./models/UserRoleRelation');
-// require('./models/RoleSensorRelation');
+
 //requiring routes
 //require('./routes')(app);
 
