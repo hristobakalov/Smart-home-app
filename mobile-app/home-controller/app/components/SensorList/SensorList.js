@@ -10,26 +10,25 @@ from 'react-native'
 
 SwitchValue = (sensor) => {
 	sensor.IsEnabled = !sensor.IsEnabled;
-	console.log(sensor);
 }
 
 export default SensorList = (props) => {
    return (
       <View style = {styles.container}>
 		<FlatList 
-					data = {props.sensors}
-					extraData ={props.shouldRefresh}
-					keyExtractor={(item) => item._id}
-					renderItem ={({item}) =>
-					<View style = {styles.row}>
-						<Text>{item.Name}
-						</Text>
-						<Switch
-							onValueChange = {() => props.switchSensor(item)}
-							value = {item.IsEnabled}
-						/>
-					</View>
-				}
+			data = {props.sensors}
+			extraData ={props.shouldRefresh}
+			keyExtractor={(item) => item._id}
+			renderItem ={({item}) =>
+				<View style = {styles.row}>
+					<Text>{item.Name}
+					</Text>
+					<Switch
+						onValueChange = {() => props.switchSensor(item)}
+						value = {item.IsEnabled}
+					/>
+				</View>
+			}
 		/>
       </View>
    )
