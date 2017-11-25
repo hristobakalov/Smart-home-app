@@ -5,7 +5,7 @@ module.exports = function(app){
 	var sensors = require('./controllers/sensors');
 	var relations = require('./controllers/relations');
 	
-	app.get('/', users.connectionCheck)'
+	app.get('/', users.connectionCheck);
 	//users
     app.get('/users', users.findAll);
     app.get('/users/:id', users.findById);
