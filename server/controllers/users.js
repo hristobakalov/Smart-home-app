@@ -8,6 +8,9 @@ exports.findAll = function(req, res){
     return res.send(results);
   });
 };
+exports.connectionCheck = function(req,res){
+	return res.status(200).send("Pong");
+};
 exports.findById = function(req, res){
   var id = req.params.id;
   User.findOne({'_id':id},function(err, result) {
@@ -36,7 +39,7 @@ exports.add = function(req, res) {
 exports.update = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
-
+	delete updates._id;
   User.update({"_id":id}, req.body,
     function (err, numberAffected) {
       if (err) return console.log(err);

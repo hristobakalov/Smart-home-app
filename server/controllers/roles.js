@@ -27,9 +27,9 @@ exports.add = function(req, res) {
   });
 }
 exports.update = function(req, res) {
-  var id = req.params.id;
-  var updates = req.body;
-
+	var id = req.params.id;
+	var updates = req.body;
+	delete updates._id;
   Role.update({"_id":id}, req.body,
     function (err, numberAffected) {
       if (err) return console.log(err);

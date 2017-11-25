@@ -55,7 +55,7 @@ exports.addUserRole = function(req, res) {
 exports.updateRoleByUserId = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
-
+	delete updates._id;
   UserRoleRelations.update({"_id":id}, req.body,
     function (err, numberAffected) {
       if (err) return console.log(err);
