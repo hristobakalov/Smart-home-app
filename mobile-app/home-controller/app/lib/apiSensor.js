@@ -62,7 +62,7 @@ var apiSensor = {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(sensor)}) 
-		//.then((response) => response.json());
+		//.then((response) => response.json())
 		.then((response) => response.text())
 		.then((responseData) => {console.log(responseData)})
 		.catch(function(err) {console.log(err)});

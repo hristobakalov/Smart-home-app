@@ -16,11 +16,13 @@ SwitchValue = (sensor) => {
 export default SensorList = (props) => {
    return (
       <View style = {styles.container}>
-		<FlatList data = {props.sensors}
-					keyExtractor={(x,i) => i}
+		<FlatList 
+					data = {props.sensors}
+					extraData ={props.shouldRefresh}
+					keyExtractor={(item) => item._id}
 					renderItem ={({item}) =>
-					<View>
-						<Text>{item.Name} - {item.IsEnabled == true ? 'On' : 'Off'}
+					<View style = {styles.row}>
+						<Text>{item.Name}
 						</Text>
 						<Switch
 							onValueChange = {() => props.switchSensor(item)}
@@ -37,5 +39,9 @@ const styles = StyleSheet.create ({
       flex: 1,
       alignItems: 'center',
       marginTop: 50
+   },
+   row:{
+	   flexDirection: 'row',
+	   marginBottom: 10
    }
 })

@@ -21,8 +21,8 @@ export default class App extends React.Component {
 			switch2Value: false,
 			switch3Value: false,
 			users: [],
-			new_data: {},
-			sensors: []
+			sensors: [],
+			shouldRefresh: false
 		};
 	}
 	
@@ -42,6 +42,8 @@ export default class App extends React.Component {
 		console.log('Switch 3 is: ' + value)
 	}
 	switchSensor = (sensor) => {
+		
+		this.setState({shouldRefresh: !this.state.shouldRefresh});
 		sensor.IsEnabled = !sensor.IsEnabled;
 		var state = sensor.IsEnabled ? "1" : "0";
 		var sensorsNew = this.state.sensors;
@@ -52,7 +54,6 @@ export default class App extends React.Component {
 		SensorApi.switch(sensorToSwitch).then((res) => {
 			//console.log(res);
 		});
-		console.log(sensor._id);
 		SensorApi.update(sensor._id, sensor);
 		for(var i = 0; i < sensorsNew.length; i++ ){
 			if(sensorsNew[i]._id == sensor._id){
@@ -76,22 +77,20 @@ export default class App extends React.Component {
 		SensorApi.getAll().then((res) => {
 			this.setState({sensors: res})
 		});
-		let new_data = this.state.users;
 	}
 	
 	send (props){
 		this.ws.send(JSON.stringify(props));
 	}
   render() {
-	  const {elements} = this.state;
     return (
 	
 		<View style={styles.container}>
 			
 			<SensorList
-				items = {elements}
 				sensors = {this.state.sensors}
 				switchSensor = {this.switchSensor}
+				shouldRefresh = {this.state.shouldRefresh}
 			/>
 			
 		 
