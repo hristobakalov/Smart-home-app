@@ -81,18 +81,41 @@ var auth = {
     // return dbUserObj;
   },
  
-  validateUser: function(username) {
+  validateUser: function(username, req, res, next) {
 		User.findOne({'Email':username},function(err, result) {
 			if(err){
 				console.log(err);
+				 res.status(500);
+				  res.json({
+					"status": 500,
+					"message": "Oops something went wrong",
+					"error": err
+				  });
+				return false;
+			}
+			if(!result) 
+			{
+				res.status(401);
+				res.json({
+					"status": 401,
+					"message": "Invalid User"
+				});
 				return false;
 			}
 			
-			if(!result) 
-			{
-				return false;
-			}
-			result["Role"] = "Administrator"; //temporary hardcoded role;
+			var resultObj = result.toObject();//temporary hardcoded role;
+				resultObj.Role ="Administrator";
+				
+			  if ((req.url.indexOf('api') >= 0 && resultObj.Role == 'Administrator')) {
+				next(); // To move to next middleware
+			  }else {
+				  res.status(403);
+				  res.json({
+					"status": 403,
+					"message": "Not Authorized"
+				  });
+				  return;
+				}
 			return result;
 			
 		});
