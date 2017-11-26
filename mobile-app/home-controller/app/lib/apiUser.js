@@ -1,4 +1,4 @@
-var baseUrl = 'http://192.168.0.105:3001/';
+var baseUrl = 'http://192.168.0.105:3001/api/';
 var	userApiUrl = baseUrl + 'users/';
 var	rolesApiUrl = baseUrl + 'roles/';
 var	sensorsApiUrl = baseUrl + 'sensors/';

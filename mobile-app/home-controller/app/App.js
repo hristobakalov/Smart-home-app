@@ -5,12 +5,31 @@ import {
 	View,
 	Button,
 	Switch,
-	FlatList
+	FlatList,
+	AsyncStorage
 	} from 'react-native';
 import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import SensorList from './components/SensorList/SensorList'
 import UserApi from './lib/apiUser';
 import SensorApi from './lib/apiSensor';
+import Login from './components/Login/Login'
+
+import Expo from 'expo'
+import {StackNavigator} from 'react-navigation'
+
+const Navigation = StackNavigator({
+	Home: {screen: Login},
+	Sensors: {screen: SensorList},
+	},{
+		navigationOptions: {
+			header: false,
+			headerStyle: {
+				backgroundColor: '#3498db',
+				marginTop: Expo.Constants.statusBarHeight
+			}
+		}
+});
+
 export default class App extends React.Component {
 	constructor (props){
 		super(props);
@@ -54,17 +73,9 @@ export default class App extends React.Component {
 	
   render() {
     return (
-	
-		<View style={styles.container}>
-			
-			<SensorList
-				sensors = {this.state.sensors}
-				switchSensor = {this.switchSensor}
-				shouldRefresh = {this.state.shouldRefresh}
-			/>
-			
-		 
-	  </View>
+		<Navigation/>
+		
+		
     );
   }
 }
@@ -77,7 +88,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
+//<Login/>
+//Working view for Sensors
+// <View style={styles.container}>
+			
+			// <SensorList
+				// sensors = {this.state.sensors}
+				// switchSensor = {this.switchSensor}
+				// shouldRefresh = {this.state.shouldRefresh}
+			// />
+			
+		 
+	  // </View> 
+	  
+	  
+	  
+	  
+	  
+	  //OLD CODE
  // <View style={styles.container}>
 			 // <SensorSwitch
 				   // toggleSwitch1 = {this.toggleSwitch1}

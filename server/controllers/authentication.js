@@ -130,9 +130,12 @@ function genToken(user) {
   }, require('../config/secret')());
  
   return {
-    token: token,
-    expires: expires,
-    user: user
+	  loginData:{
+		    token: token,
+			expires: expires,
+			user: user
+	  }
+   
   };
 }
  
