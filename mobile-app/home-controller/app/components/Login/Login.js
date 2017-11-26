@@ -32,8 +32,9 @@ export default class Login extends Component {
 	}
 	
 	_loadInitialState = async() =>{
-		var value = await AsyncStorage.getItem('user');
-		if(value !== null){
+		var value = await AsyncStorage.getItem('loginData');
+		var valueObj = JSON.parse(value);
+		if(valueObj !== null && valueObj.expires > Date.now()){
 			this.props.navigation.navigate('Sensors');
 		}
 	}
@@ -54,12 +55,12 @@ export default class Login extends Component {
 		})
 		.then((response) => response.json())
 		.then((res) => {
-			if(res.success === true){
-				AsyncStorage.setItem('loginData', res.loginData);
+			if(!res.message){
+				AsyncStorage.setItem('loginData', JSON.stringify(res.loginData));
 				this.props.navigation.navigate('Sensors');
 			}
 			else{
-				alert('res.message');
+				alert(res.message);
 			}
 		})
 		.done();

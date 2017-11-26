@@ -1,17 +1,24 @@
-var baseUrl = 'http://192.168.0.105:3001/api/';
+import Settings from '../config/settings';
+
+
+var baseUrl = Settings.baseUrl + 'api/';
 
 var	sensorsApiUrl = baseUrl + 'sensors/';
 
 var apiSensor = {
-	getAll(){
+	getAll(token, username){
 		return fetch(sensorsApiUrl, {
-			method: "GET",
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-		})
-		.then((response) => response.json());
+				method: "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'x-access-token': token,
+					'x-key': username
+				},
+			})
+			.then((response) => response.json());
+			
+		
 	},
 	getById(id){
 		return fetch(sensorsApiUrl + id, {
@@ -43,29 +50,36 @@ var apiSensor = {
 			body: JSON.stringify(sensor)})
 		.then((response) => response.json());
 	},
-	update(id, sensor){
+	update(id, sensor, token, username){
 		return fetch(sensorsApiUrl  + id, {
 			method: "PUT",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			},
 			body: JSON.stringify(sensor)})
 		.then((response) => response.json());
 	},
-	switch(sensor){ // need name and state
+	switch(sensor , token, username){ // need name and state
 	console.log(sensor);
 		return fetch(sensorsApiUrl + 'switch', {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			},
 			body: JSON.stringify(sensor)}) 
 		//.then((response) => response.json())
-		.then((response) => response.text())
-		.then((responseData) => {console.log(responseData)})
-		.catch(function(err) {console.log(err)});
+		.then((response) => response.json());
+		// .then((responseData) => {console.log(responseData)})
+		// .catch(function(err) {console.log(err)});
+		// .then((response) => response.text())
+		// .then((responseData) => {console.log(responseData)})
+		// .catch(function(err) {console.log(err)});
 		
 	}
 };

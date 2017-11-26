@@ -11,18 +11,18 @@ import {
 import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import SensorList from './components/SensorList/SensorList'
 import UserApi from './lib/apiUser';
-import SensorApi from './lib/apiSensor';
+
 import Login from './components/Login/Login'
 
 import Expo from 'expo'
 import {StackNavigator} from 'react-navigation'
-
+console.disableYellowBox = true;
 const Navigation = StackNavigator({
 	Home: {screen: Login},
 	Sensors: {screen: SensorList},
 	},{
 		navigationOptions: {
-			header: false,
+			// header: false,
 			headerStyle: {
 				backgroundColor: '#3498db',
 				marginTop: Expo.Constants.statusBarHeight
@@ -62,14 +62,14 @@ export default class App extends React.Component {
 		}
 		this.setState({sensors: sensorsNew});
 	}
-	componentWillMount(){
-		UserApi.getAll().then((res) => {
-			this.setState({users: JSON.stringify(res)})
-		});
-		SensorApi.getAll().then((res) => {
-			this.setState({sensors: res})
-		});
-	}
+	// componentWillMount(){
+		// UserApi.getAll().then((res) => {
+			// this.setState({users: JSON.stringify(res)})
+		// });
+		// SensorApi.getAll().then((res) => {
+			// this.setState({sensors: res})
+		// });
+	// }
 	
   render() {
     return (

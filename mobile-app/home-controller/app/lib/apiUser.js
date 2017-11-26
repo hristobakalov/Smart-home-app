@@ -1,4 +1,7 @@
-var baseUrl = 'http://192.168.0.105:3001/api/';
+import Settings from '../config/settings';
+
+
+var baseUrl = Settings.baseUrl + 'api/';
 var	userApiUrl = baseUrl + 'users/';
 var	rolesApiUrl = baseUrl + 'roles/';
 var	sensorsApiUrl = baseUrl + 'sensors/';
