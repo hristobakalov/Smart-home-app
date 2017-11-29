@@ -5,6 +5,10 @@ var connection = mongoose.createConnection(constants.DBUrl);
 User = connection.model('User');
 exports.findAll = function(req, res){
   User.find({},function(err, results) {
+	  if(err){
+		  res.sendStatus(500);
+	  }
+	  // results.forEach()
     return res.send(results);
   });
 };

@@ -10,6 +10,7 @@ import {
 	} from 'react-native';
 import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import SensorList from './components/SensorList/SensorList'
+import UserList from './components/UserList/UserList'
 import UserApi from './lib/apiUser';
 
 import Login from './components/Login/Login'
@@ -20,6 +21,7 @@ console.disableYellowBox = true;
 const Navigation = StackNavigator({
 	Home: {screen: Login},
 	Sensors: {screen: SensorList},
+	Users: {screen: UserList},
 	},{
 		navigationOptions: {
 			// header: false,

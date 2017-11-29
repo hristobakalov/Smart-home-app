@@ -5,12 +5,13 @@ import {
    Switch,
    StyleSheet,
    FlatList,
-   AsyncStorage
+   AsyncStorage,
+   Button
 } 
 from 'react-native'
 
 import SensorApi from '../../lib/apiSensor';
-
+import {StackNavigator} from 'react-navigation'
 
 export default class SensorList extends Component {
 	
@@ -54,6 +55,9 @@ export default class SensorList extends Component {
 			console.log(err);
 		}
 	}
+	navigateToUserScreen = () => {
+		this.props.navigation.navigate('Users');
+	}
 	
 	componentWillMount(){
 		var test = this._loadInitialState().done();
@@ -83,6 +87,8 @@ export default class SensorList extends Component {
 			// });
 		
 	}
+	
+	
 	render() {
 	   return (
 		  <View style = {styles.container}>
@@ -102,6 +108,13 @@ export default class SensorList extends Component {
 					</View>
 				}
 			/>
+			
+			<Button
+			  onPress={this.navigateToUserScreen}
+			  title="Go to user's list"
+			  style = {styles.button}
+			  accessibilityLabel="Go to User List View"
+			/>
 		  </View>
 	   )
 	}
@@ -119,5 +132,9 @@ const styles = StyleSheet.create ({
    },
    switch:{
 	   alignItems: 'flex-end'
+   },
+   button:{
+	   marginBottom: 20,
+	   color: "#3498db"
    }
 })

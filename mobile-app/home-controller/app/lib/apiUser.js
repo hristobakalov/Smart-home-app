@@ -6,12 +6,14 @@ var	userApiUrl = baseUrl + 'users/';
 var	rolesApiUrl = baseUrl + 'roles/';
 var	sensorsApiUrl = baseUrl + 'sensors/';
 var apiUser = {
-	getAll(){
+	getAll(token, username){
 		return fetch(userApiUrl, {
 			method: "GET",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			},
 			})
 		.then((response) => response.json());
@@ -46,12 +48,14 @@ var apiUser = {
 			body: JSON.stringify(user)})
 		.then((response) => response.json());
 	},
-	update(id, user){
+	update(id, user, token, username){
 		return fetch(userApiUrl + id, {
 			method: "PUT",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			},
 			body: JSON.stringify(user)})
 		.then((response) => response.json());
