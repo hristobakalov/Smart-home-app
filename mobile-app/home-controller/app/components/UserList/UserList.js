@@ -12,7 +12,7 @@ import {
 from 'react-native'
 
 import UserApi from '../../lib/apiUser';
-
+import {StackNavigator} from 'react-navigation'
 
 export default class UserList extends Component {
 	
@@ -34,11 +34,12 @@ export default class UserList extends Component {
 	
 	editUser = (user) => {
 		console.log("PRESED");
+		
+		this.props.navigation.navigate('EditUser', {user: user});
 	}
 	componentWillMount(){
 		var test = this._loadInitialState().done();
 		console.log(this.state.userData);
-		
 	}
 	
 	_loadInitialState = async() =>{
@@ -84,9 +85,8 @@ export default class UserList extends Component {
 					<TouchableOpacity
 						activeOpacity={0.4}
 						style = {this.state.pressStatus ? styles.buttonPress : styles.row}
-						onPress={this.editUser}
-						onHideUnderlay={this._onHideUnderlay.bind(this)}
-						onShowUnderlay={this._onShowUnderlay.bind(this)}
+						onPress={() => {this.editUser(item)}}
+						
 						underlayColor ='#3498db'
 					>
 						<Text style={this.state.userData.user._id == item._id ? styles.textBold : styles.text}>{item.FirstName} {item.LastName}

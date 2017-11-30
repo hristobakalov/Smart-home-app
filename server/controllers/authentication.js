@@ -58,6 +58,7 @@ var auth = {
 			}
 			if(!user || password != user.Password)
 			{
+				console.log('Invalid credentials');
 				 res.status(401);
 				res.json({
 					"status": 401,

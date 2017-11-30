@@ -62,7 +62,6 @@ export default class SensorList extends Component {
 	componentWillMount(){
 		var test = this._loadInitialState().done();
 		console.log(this.state.userData);
-		
 	}
 	
 	_loadInitialState = async() =>{

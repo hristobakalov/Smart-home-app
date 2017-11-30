@@ -11,6 +11,7 @@ import {
 import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import SensorList from './components/SensorList/SensorList'
 import UserList from './components/UserList/UserList'
+import EditUser from './components/EditUser/EditUser'
 import UserApi from './lib/apiUser';
 
 import Login from './components/Login/Login'
@@ -22,6 +23,7 @@ const Navigation = StackNavigator({
 	Home: {screen: Login},
 	Sensors: {screen: SensorList},
 	Users: {screen: UserList},
+	EditUser: {screen: EditUser}
 	},{
 		navigationOptions: {
 			// header: false,
