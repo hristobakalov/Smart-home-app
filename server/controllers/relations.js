@@ -123,6 +123,12 @@ exports.setSensorsToRole = function(req, res){
   RoleSensorRelations
    .update({"RoleId":roleId}, req.body,function (err, numberAffected) {
       if (err) return console.log(err);
+	  if(numberAffected == 0){
+		   RoleSensorRelations.create(req.body, function (err, relation) {
+			if (err) return console.log(err);
+			return res.send(relation);
+		  });
+	  }
       console.log('Updated %d UserRoleRelations', numberAffected);
       res.send(200);
   });
