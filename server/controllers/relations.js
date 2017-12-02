@@ -132,8 +132,11 @@ exports.setSensorsToRole = function(req, res){
 			return res.send(relation);
 		  });
 	  }
-      console.log('Updated %d UserRoleRelations', numberAffected);
-      res.send(200);
+	  else{
+		 console.log('Updated %d UserRoleRelations', numberAffected.nModified);
+		res.send(200);
+	  }
+      
   });
 };
 
