@@ -116,7 +116,16 @@ exports.addSensorToRole = function(req, res){
   });
 };
 
+exports.setSensorsToRole = function(req, res){
+  var roleId = req.params.id;
 
+  RoleSensorRelations
+   .update({"RoleId":roleId}, req.body,function (err, numberAffected) {
+      if (err) return console.log(err);
+      console.log('Updated %d UserRoleRelations', numberAffected);
+      res.send(200);
+  });
+};
 
 exports.import = function(req, res){
 	console.log("import initiated");
