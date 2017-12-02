@@ -215,7 +215,12 @@ export default class EditUser extends Component {
 				console.log(res);
 			});
 		}
-		this.forceUpdate();
+		
+		if(userData.user._id == this.state.user._id){
+			userData.user.Role = value._id;
+			AsyncStorage.setItem('loginData', JSON.stringify(userData));
+		}
+		
 	}
 	
 	render() {

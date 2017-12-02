@@ -70,7 +70,11 @@ export default class SensorList extends Component {
 		   let value = await AsyncStorage.getItem('loginData');
 		   if (value != null){
 			  var loginData = JSON.parse(value);
+			  
 			  this.setState({userData: loginData});
+			  if(loginData.user.Role == "Administrator"){
+				  return;
+			  }
 			  RelationApi.getSensorsByRoleId(loginData.user.Role , loginData.token, loginData.user.Email).then((res) => {
 					console.log(res);
 					this.setState({sensors: res})
