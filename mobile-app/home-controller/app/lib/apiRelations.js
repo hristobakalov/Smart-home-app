@@ -38,18 +38,18 @@ var apiRelations = {
 			// },})
 		// .then((response) => response.json());
 	// },
-	// add(role, token, username){
-		// return fetch(relationsApiUrl, {
-			// method: "POST",
-			// headers: {
-				// 'Accept': 'application/json',
-				// 'Content-Type': 'application/json',
-				// 'x-access-token': token,
-				// 'x-key': username,
-			// },
-			// body: JSON.stringify(role)})
-		// .then((response) => response.json());
-	// },
+	addUserRole(relation, token, username){
+		return fetch(relationsApiUrl + 'role', {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username,
+			},
+			body: JSON.stringify(relation)})
+		.then((response) => response.json());
+	},
 	updateRoleByRelationId(id, userRole, token, username){
 		var url = relationsApiUrl  + id + '/role';
 		console.log(url);

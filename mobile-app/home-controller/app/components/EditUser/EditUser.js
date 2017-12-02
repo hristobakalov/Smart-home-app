@@ -57,19 +57,18 @@ export default class EditUser extends Component {
 		}
 		this.props.navigation.navigate('Users');
 	}
+	
+	isEmpty = (obj) => {
+		for(var key in obj) {
+			if(obj.hasOwnProperty(key))
+				return false;
+		}
+		return true;
+	}
 	componentWillMount(){
 		this.setState({user: this.props.navigation.state.params.user});
 		var test = this._loadInitialState().done(()=>{
 			var userData = this.state.userData;
-			
-			RoleApi.getAll(userData.token, userData.user.Email)
-			.then((res,err) => {
-				if(err){
-					console.log(err);
-				}
-				
-				this.setState({roles: res});
-			});
 			
 			RelationApi.getAllUserRoleRelations(userData.token, userData.user.Email)
 			.then((res,err) => {
@@ -80,6 +79,7 @@ export default class EditUser extends Component {
 				var relation = res.filter((item) => {
 					return item.UserId==user._id;
 				});
+				
 				this.setState({userRoleRelation: relation});
 						
 			});
@@ -89,9 +89,38 @@ export default class EditUser extends Component {
 				if(err){
 					console.log(err);
 				}
-				
+				console.log(res);
 				this.setState({selectedRole: res});
+				
+				RoleApi.getAll(userData.token, userData.user.Email)
+				.then((res,err) => {
+					if(err){
+						console.log(err);
+					}
+					
+					res = res.filter((el)=> {
+						return el.Name != this.state.selectedRole.Name;
+					});
+					if(!this.isEmpty(res)){
+						this.setState({roles: res});
+						console.log(res);
+					}
+					
+				});
 			});
+			
+			RoleApi.getAll(userData.token, userData.user.Email)
+				.then((res,err) => {
+					if(err){
+						console.log(err);
+					}
+					console.log(this.state.roles);
+					if(this.isEmpty(this.state.roles)){
+						this.setState({roles: res});
+					console.log(res);
+					}
+				});
+			
 		});
 	}
 	
@@ -149,6 +178,9 @@ export default class EditUser extends Component {
 		this.forceUpdate();
 	}
 	updateRole(value){
+		if(value == null || value == 0){
+			return;
+		}
 		this.setState({selectedRole: value});
 		
 		var userData = this.state.userData;
@@ -165,12 +197,27 @@ export default class EditUser extends Component {
 				
 				this.setState({userRoleRelation: res});
 				console.log(res);
+				
 			});
 		}
 		else{
 			//create new relation
+			var relation = {
+				UserId: this.state.user._id,
+				RoleId: value._id
+			}
+			RelationApi.addUserRole(relation, userData.token, userData.user.Email)
+			.then((res,err) => {
+				if(err){
+					console.log(err);
+					return;
+				}
+				
+				this.setState({userRoleRelation: res});
+				console.log(res);
+			});
 		}
-		
+		this.forceUpdate();
 	}
 	
 	render() {
@@ -219,8 +266,10 @@ export default class EditUser extends Component {
 					mode="dropdown"
 					selectedValue = {this.state.selectedRole}
 					onValueChange={(value) => this.updateRole(value)}>
+					<Picker.Item label={this.state.selectedRole.Name != undefined ? this.state.selectedRole.Name: "Please select a role..."} value={0} key={0} style={styles.picker}/>
 					{this.state.roles.map((item, index) => {
-						return (<Picker.Item label={item.Name} value={item} key={index} style={styles.picker}/>) 
+						return (<Picker.Item label={item.Name} value={item} key={item} style={styles.picker}/>)
+						
                     })}
                 </Picker>
 				<TouchableOpacity
