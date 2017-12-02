@@ -13,8 +13,14 @@ from 'react-native'
 
 import UserApi from '../../lib/apiUser';
 import {StackNavigator} from 'react-navigation'
+import { NavigationActions } from 'react-navigation'
+
+const backAction = NavigationActions.back({
+		key: 'Sensors'
+})
 
 export default class UserList extends Component {
+	
 	
 	static navigationOptions= {
 		title: 'Users',
@@ -27,6 +33,7 @@ export default class UserList extends Component {
 			userData: {},
 			pressStatus: false
 		};
+		this.props.navigation.dispatch(backAction);
 	}
 	// SwitchValue = (sensor) => {
 		// sensor.IsEnabled = !sensor.IsEnabled;
@@ -39,7 +46,7 @@ export default class UserList extends Component {
 	}
 	componentWillMount(){
 		var test = this._loadInitialState().done();
-		console.log(this.state.userData);
+		console.log(this.props.navigation.state.key);
 	}
 	
 	_loadInitialState = async() =>{

@@ -61,7 +61,7 @@ export default class SensorList extends Component {
 	
 	componentWillMount(){
 		var test = this._loadInitialState().done();
-		console.log(this.state.userData);
+		console.log(this.props.navigation.state.key);
 	}
 	
 	_loadInitialState = async() =>{
@@ -109,10 +109,10 @@ export default class SensorList extends Component {
 			/>
 			
 			<Button
-			  onPress={this.navigateToUserScreen}
-			  title="Go to user's list"
-			  style = {styles.button}
-			  accessibilityLabel="Go to User List View"
+				onPress={this.navigateToUserScreen}
+				title="Go to user's list"
+				style = {styles.button}
+				accessibilityLabel="Go to User List View"
 			/>
 		  </View>
 	   )

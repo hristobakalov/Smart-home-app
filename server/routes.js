@@ -41,7 +41,7 @@
 	app.get('/api/userrolerelations', relations.findAllUserRoleRelations);
 	app.get('/api/relations/user/:id/role', relations.findRoleByUserId);
 	app.post('/api/relations/user/role', relations.addUserRole);
-	
+	app.put('/api/relations/user/:id/role',relations.updateRoleByUserId);
 
 
 module.exports = app;

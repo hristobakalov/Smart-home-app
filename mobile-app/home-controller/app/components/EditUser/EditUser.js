@@ -9,11 +9,14 @@ import {
    Image,
    KeyboardAvoidingView,
    TextInput,
-   StatusBar
+   StatusBar,
+   Picker,
 } 
 from 'react-native'
 
 import UserApi from '../../lib/apiUser';
+import RoleApi from '../../lib/apiRole';
+import RelationApi from '../../lib/apiRelations';
 import {StackNavigator} from 'react-navigation'
 
 export default class EditUser extends Component {
@@ -26,13 +29,15 @@ export default class EditUser extends Component {
 			user: {},
 			shouldRefresh: false,
 			userData: {},
-			pressStatus: false
+			pressStatus: false,
+			roles: [],
+			selectedRole:{},
+			userRoleRelation: {}
 		};
 	}
 	
 	saveUser = () => {
-		console.log("Saved User");
-		console.log(this.state.user);
+		console.log("Saving User");
 		var user = this.state.user;
 		var userData = this.state.userData;
 		//update(id, user, token, username
@@ -42,22 +47,52 @@ export default class EditUser extends Component {
 				 return;
 			 }
 			 console.log(res);
-			
-			
 		});
 		if(user._id == userData.user._id){
 			// var userObj = user.toObject();
 			// userObj.Role = userData.user.Role;
 			user['Role'] = userData.user.Role;
 			userData.user = user;
-			console.log(userData);
 			AsyncStorage.setItem('loginData', JSON.stringify(userData));
 		}
 		this.props.navigation.navigate('Users');
 	}
 	componentWillMount(){
 		this.setState({user: this.props.navigation.state.params.user});
-		var test = this._loadInitialState().done();
+		var test = this._loadInitialState().done(()=>{
+			var userData = this.state.userData;
+			
+			RoleApi.getAll(userData.token, userData.user.Email)
+			.then((res,err) => {
+				if(err){
+					console.log(err);
+				}
+				
+				this.setState({roles: res});
+			});
+			
+			RelationApi.getAllUserRoleRelations(userData.token, userData.user.Email)
+			.then((res,err) => {
+				if(err){
+					console.log(err);
+				}
+				var user = this.state.user;
+				var relation = res.filter((item) => {
+					return item.UserId==user._id;
+				});
+				this.setState({userRoleRelation: relation});
+						
+			});
+			
+			RelationApi.getRoleByUserId(this.state.user._id, userData.token, userData.user.Email)
+			.then((res,err) => {
+				if(err){
+					console.log(err);
+				}
+				
+				this.setState({selectedRole: res});
+			});
+		});
 	}
 	
 	focusNextField(nextField) {
@@ -113,6 +148,30 @@ export default class EditUser extends Component {
 		// re-render
 		this.forceUpdate();
 	}
+	updateRole(value){
+		this.setState({selectedRole: value});
+		
+		var userData = this.state.userData;
+		var relation = this.state.userRoleRelation;
+		if(relation[0]){
+			relation[0].RoleId = value._id;
+			console.log(relation[0]);
+			RelationApi.updateRoleByRelationId(relation[0]._id, relation[0], userData.token, userData.user.Email)
+			.then((res,err) => {
+				if(err){
+					console.log(err);
+					return;
+				}
+				
+				this.setState({userRoleRelation: res});
+				console.log(res);
+			});
+		}
+		else{
+			//create new relation
+		}
+		
+	}
 	
 	render() {
 	   return (
@@ -152,9 +211,18 @@ export default class EditUser extends Component {
 					placeholder= "Last Name"
 					underlineColorAndroid = 'transparent'
 					placeholderTextColor="rgba(0,0,0,0.7)"
-					returnKeyType="done"
+					returnKeyType="next"
 					onChangeText={ (value) => this.updateLastName(value)}
 				/>
+				<Picker
+					style={styles.input}
+					mode="dropdown"
+					selectedValue = {this.state.selectedRole}
+					onValueChange={(value) => this.updateRole(value)}>
+					{this.state.roles.map((item, index) => {
+						return (<Picker.Item label={item.Name} value={item} key={index} style={styles.picker}/>) 
+                    })}
+                </Picker>
 				<TouchableOpacity
 					style={styles.buttonContainer}
 					onPress={this.saveUser}
@@ -213,5 +281,9 @@ const styles = StyleSheet.create ({
 		textAlign: 'center',
 		color: '#FFF',
 		fontWeight: '700'
+	},
+	picker:{
+		padding: 10,
+		textDecorationLine:'underline'
 	},
 })

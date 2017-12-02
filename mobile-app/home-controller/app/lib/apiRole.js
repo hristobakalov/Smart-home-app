@@ -5,12 +5,14 @@ var baseUrl = Settings.baseUrl + 'api/';
 var	rolesApiUrl = baseUrl + 'roles/';
 
 var apiRole = {
-	getAll(){
+	getAll(token, username){
 		return fetch(rolesApiUrl, {
 			method: "GET",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			}
 			})
 		.then((response) => response.json());
@@ -34,22 +36,26 @@ var apiRole = {
 			},})
 		.then((response) => response.json());
 	},
-	add(role){
+	add(role, token, username){
 		return fetch(rolesApiUrl, {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username,
 			},
-			body: JSON.stringify(role)}
+			body: JSON.stringify(role)})
 		.then((response) => response.json());
 	},
-	update(id, role){
+	update(id, role, token, username){
 		return fetch(rolesApiUrl  + id, {
 			method: "PUT",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			},
 			body: JSON.stringify(role)})
 		.then((response) => response.json());

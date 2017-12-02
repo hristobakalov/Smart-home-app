@@ -12,18 +12,28 @@ import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import SensorList from './components/SensorList/SensorList'
 import UserList from './components/UserList/UserList'
 import EditUser from './components/EditUser/EditUser'
+import DrawerView from './components/Drawer/Drawer'
 import UserApi from './lib/apiUser';
 
 import Login from './components/Login/Login'
 
 import Expo from 'expo'
-import {StackNavigator} from 'react-navigation'
+import {StackNavigator, DrawerNavigator} from 'react-navigation'
+
 console.disableYellowBox = true;
-const Navigation = StackNavigator({
+
+const Drawer = DrawerNavigator({
 	Home: {screen: Login},
 	Sensors: {screen: SensorList},
 	Users: {screen: UserList},
 	EditUser: {screen: EditUser}
+},
+{
+	contentComponent: props => <DrawerView{...props}/>
+});
+
+const Navigation = StackNavigator({
+	Home: {screen: Drawer},
 	},{
 		navigationOptions: {
 			// header: false,
@@ -78,8 +88,6 @@ export default class App extends React.Component {
   render() {
     return (
 		<Navigation/>
-		
-		
     );
   }
 }
