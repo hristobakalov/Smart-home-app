@@ -79,6 +79,7 @@ exports.findSensorsByRoleId = function(req, res){
 		   return res.status(500).send(err);
 		   }
 		   if(!relation){
+			   console.log(relation);
 			   return res.status(404).send("Not found");
 		   }
 	   Sensors.find({'_id': { $in: relation.SensorId}},function(err, result) {

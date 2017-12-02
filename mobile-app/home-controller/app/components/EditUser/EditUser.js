@@ -89,7 +89,6 @@ export default class EditUser extends Component {
 				if(err){
 					console.log(err);
 				}
-				console.log(res);
 				this.setState({selectedRole: res});
 				
 				RoleApi.getAll(userData.token, userData.user.Email)
@@ -117,7 +116,6 @@ export default class EditUser extends Component {
 					console.log(this.state.roles);
 					if(this.isEmpty(this.state.roles)){
 						this.setState({roles: res});
-					console.log(res);
 					}
 				});
 			

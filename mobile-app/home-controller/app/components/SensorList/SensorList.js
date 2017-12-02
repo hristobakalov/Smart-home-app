@@ -11,6 +11,7 @@ import {
 from 'react-native'
 
 import SensorApi from '../../lib/apiSensor';
+import RelationApi from '../../lib/apiRelations';
 import {StackNavigator} from 'react-navigation'
 
 export default class SensorList extends Component {
@@ -70,9 +71,13 @@ export default class SensorList extends Component {
 		   if (value != null){
 			  var loginData = JSON.parse(value);
 			  this.setState({userData: loginData});
-			  SensorApi.getAll(loginData.token, loginData.user.Email).then((res) => {
-				this.setState({sensors: res})
+			  RelationApi.getSensorsByRoleId(loginData.user.Role , loginData.token, loginData.user.Email).then((res) => {
+					console.log(res);
+					this.setState({sensors: res})
 				});
+			  // SensorApi.getAll(loginData.token, loginData.user.Email).then((res) => {
+				// this.setState({sensors: res})
+				// });
 		   }
 		   else {
 			  console.log("something smells here");
@@ -80,6 +85,8 @@ export default class SensorList extends Component {
 		} catch (error) {
 		  console.log("something blew up");
 		}
+		
+		
 		 // let value = await AsyncStorage.getItem('loginData', (err, result)=>{
 			// console.log(result);
 			// console.log(err);
