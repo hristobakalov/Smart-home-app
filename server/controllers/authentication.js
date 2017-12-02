@@ -4,7 +4,7 @@ var constants = require('../constants');
 var connection = mongoose.createConnection(constants.DBUrl);
 
 User = connection.model('User');
-
+Relations = connection.model('UserRoleRelation');
 var auth = {
  
   login: function(req, res) {
@@ -69,9 +69,24 @@ var auth = {
 			//user ["Role"] = "Administrator"; //temporary hardcoded role;
 			var resultObj = user.toObject();
 				resultObj.Role ="Administrator";
-			  res.json(genToken(resultObj));
-			//console.log(user);
-			return user;
+			UserRoleRelations.findOne({'UserId':resultObj._id},function(err, relation) {
+				if (err){
+				   console.log("user relation failer: ", err);
+				   res.json({
+					"status": 500,
+					"message": "Something wrong with relations"
+				  });
+				   return false;
+				}
+				if(!relation){
+				  console.log("user relation not found");
+				}
+				resultObj.Role =relation.RoleId;
+				res.json(genToken(resultObj));
+				console.log(resultObj);
+				return resultObj;
+			});
+			
 	});
     // var dbUserObj = { // spoofing a userobject from the DB. 
       // name: 'arvind',

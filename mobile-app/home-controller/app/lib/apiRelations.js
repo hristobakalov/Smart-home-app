@@ -4,6 +4,8 @@ import Settings from '../config/settings';
 var baseUrl = Settings.baseUrl + 'api/';
 var	relationsApiUrl = baseUrl + 'relations/user/';
 var getAllUrl = baseUrl + 'userrolerelations/';
+var sensorRoleUrl = baseUrl + 'relations/role/';
+
 var apiRelations = {
 	getAllUserRoleRelations(token, username){
 		return fetch(getAllUrl, {
@@ -52,7 +54,6 @@ var apiRelations = {
 	},
 	updateRoleByRelationId(id, userRole, token, username){
 		var url = relationsApiUrl  + id + '/role';
-		console.log(url);
 		return fetch(url, {
 			method: "PUT",
 			headers: {
@@ -63,7 +64,35 @@ var apiRelations = {
 			},
 			body: JSON.stringify(userRole)})
 		.then((response) => response.json());
-	}
+	},
+	
+	getSensorsByRoleId(id, token, username){
+		return fetch(sensorRoleUrl + id + '/sensor', {
+			method: "GET",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
+			},
+			})
+		.then((response) => response.json());
+	},
+	
+	setSensorsToRoleId(id, sensors, token, username){
+		var url = sensorRoleUrl  + id + '/sensor';
+		return fetch(url, {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
+			},
+			body: JSON.stringify(sensors)})
+		.then((response) => response.json());
+	},
+	
 };
 
 module.exports = apiRelations;
