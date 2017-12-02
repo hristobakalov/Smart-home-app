@@ -43,6 +43,7 @@
 	app.post('/api/relations/user/role', relations.addUserRole);
 	app.put('/api/relations/user/:id/role',relations.updateRoleByUserId);
 
+	app.get('/api/relations/role/sensor/', relations.findAllRoleSensorRelations);
 	app.get('/api/relations/role/:id/sensor/', relations.findSensorsByRoleId);
 	app.post('/api/relations/role/:id/sensor', relations.setSensorsToRole);
 
