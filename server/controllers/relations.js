@@ -124,6 +124,8 @@ exports.setSensorsToRole = function(req, res){
    .update({"RoleId":roleId}, req.body,function (err, numberAffected) {
       if (err) return console.log(err);
 	  console.log(numberAffected);
+	  console.log(numberAffected.nModified);
+	  console.log("is it true: ", numberAffected.nModified == 0 );
 	  if(numberAffected.nModified == 0 || numberAffected == undefined){
 		   RoleSensorRelations.create(req.body, function (err, relation) {
 			if (err) return console.log(err);
