@@ -17,37 +17,77 @@ from 'react-native'
 import UserApi from '../../lib/apiUser';
 import RoleApi from '../../lib/apiRole';
 import RelationApi from '../../lib/apiRelations';
-import Settings from '../../config/roles';
 import {StackNavigator} from 'react-navigation'
 
-export default class EditUser extends Component {
+export default class AddUser extends Component {
 	static navigationOptions= {
-		title: 'Edit User',
+		title: 'Add User',
 	};
 	constructor (props){
 		super(props);
 		this.state = {
 			user: {},
-			shouldRefresh: false,
 			userData: {},
-			pressStatus: false,
 			roles: [],
 			selectedRole:{},
 			userRoleRelation: {},
-			canEditRoles: false,
+			repeatPassword: "",
+			matchingPasswords: true,
+			allFieldsHaveValue: true
 		};
 	}
 	
 	saveUser = () => {
 		console.log("Saving User");
 		var user = this.state.user;
+		var role = this.state.selectedRole;
+		
+		if(!user || user.Email == undefined || user.FirstName == undefined || user.LastName == undefined
+			|| user.Password == undefined || !role || role.Name == undefined || this.state.repeatPassword != user.Password)
+		{
+			this.state.allFieldsHaveValue = false;
+			this.forceUpdate();
+			return;
+		}
+			
 		var userData = this.state.userData;
+		
+		UserApi.add(user, userData.token, userData.user.Email)
+		.then((res, err) => {
+			if(err){
+				 alert(err);
+				 return;
+			 }
+			 if(res._id && role._id){
+				 //create new relation
+				 
+				var relation = {
+					UserId: res._id,
+					RoleId: role._id
+				}
+				RelationApi.addUserRole(relation, userData.token, userData.user.Email)
+				.then((res,err) => {
+					if(err){
+						console.log(err);
+						return;
+					}
+					this.props.navigation.navigate('Users');
+					console.log(res);
+				});
+			 }
+			 else{
+				 console.log('kor kapan: User or ROle id is empty');
+			 }
+			 
+		});
+		/* 
 		//update(id, user, token, username
 		 UserApi.update(user._id, user, userData.token, userData.user.Email).then((res, err) => {
 			if(err){
 				 alert(err);
 				 return;
 			 }
+			 console.log(res);
 		});
 		if(user._id == userData.user._id){
 			// var userObj = user.toObject();
@@ -57,6 +97,26 @@ export default class EditUser extends Component {
 			AsyncStorage.setItem('loginData', JSON.stringify(userData));
 		}
 		this.props.navigation.navigate('Users');
+		 */
+		/*
+		
+			//create new relation
+			var relation = {
+				UserId: this.state.user._id,
+				RoleId: value._id
+			}
+			RelationApi.addUserRole(relation, userData.token, userData.user.Email)
+			.then((res,err) => {
+				if(err){
+					console.log(err);
+					return;
+				}
+				
+				this.setState({userRoleRelation: res});
+				console.log(res);
+			});
+		
+		*/
 	}
 	
 	isEmpty = (obj) => {
@@ -67,56 +127,19 @@ export default class EditUser extends Component {
 		return true;
 	}
 	componentWillMount(){
-		this.setState({user: this.props.navigation.state.params.user});
 		var test = this._loadInitialState().done(()=>{
 			var userData = this.state.userData;
-			
-			RelationApi.getAllUserRoleRelations(userData.token, userData.user.Email)
-			.then((res,err) => {
-				if(err){
-					console.log(err);
-				}
-				var user = this.state.user;
-				var relation = res.filter((item) => {
-					return item.UserId==user._id;
-				});
-				
-				this.setState({userRoleRelation: relation});
-						
-			});
-			
-			RelationApi.getRoleByUserId(this.state.user._id, userData.token, userData.user.Email)
-			.then((res,err) => {
-				if(err){
-					console.log(err);
-				}
-				this.setState({selectedRole: res});
-				
-				RoleApi.getAll(userData.token, userData.user.Email)
-				.then((res,err) => {
-					if(err){
-						console.log(err);
-					}
-					
-					res = res.filter((el)=> {
-						return el.Name != this.state.selectedRole.Name;
-					});
-					if(!this.isEmpty(res)){
-						this.setState({roles: res});
-					}
-				});
-			});
 			
 			RoleApi.getAll(userData.token, userData.user.Email)
 				.then((res,err) => {
 					if(err){
 						console.log(err);
 					}
+					console.log(this.state.roles);
 					if(this.isEmpty(this.state.roles)){
 						this.setState({roles: res});
 					}
 				});
-			
 		});
 	}
 	
@@ -130,8 +153,6 @@ export default class EditUser extends Component {
 		   if (value != null){
 			  var loginData = JSON.parse(value);
 			  this.setState({userData: loginData});
-			  console.log(Settings);
-			  this.setState({canEditRoles: loginData.user.Role == Settings.Administrator});
 		   }
 		   else {
 			  console.log("Users: something smells here");
@@ -175,48 +196,32 @@ export default class EditUser extends Component {
 		// re-render
 		this.forceUpdate();
 	}
+	updatePassword(value){
+		if(!value){
+			alert("Password cannot be empty!");
+			return;
+		}
+		const user = this.state.user;
+		user.Password = value;
+		// re-render
+		this.forceUpdate();
+	}
+	updateRepeatPassword(value){
+		this.setState({repeatPassword: value});
+		// re-render
+		if(this.state.user.Password != value){
+			this.state.matchingPasswords = false;
+		}
+		else{
+			this.state.matchingPasswords = true;
+		}
+		this.forceUpdate();
+	}
 	updateRole(value){
 		if(value == null || value == 0){
 			return;
 		}
 		this.setState({selectedRole: value});
-		
-		var userData = this.state.userData;
-		var relation = this.state.userRoleRelation;
-		if(relation[0]){
-			relation[0].RoleId = value._id;
-			RelationApi.updateRoleByRelationId(relation[0]._id, relation[0], userData.token, userData.user.Email)
-			.then((res,err) => {
-				if(err){
-					console.log(err);
-					return;
-				}
-				
-				this.setState({userRoleRelation: res});
-			});
-		}
-		else{
-			//create new relation
-			var relation = {
-				UserId: this.state.user._id,
-				RoleId: value._id
-			}
-			RelationApi.addUserRole(relation, userData.token, userData.user.Email)
-			.then((res,err) => {
-				if(err){
-					console.log(err);
-					return;
-				}
-				
-				this.setState({userRoleRelation: res});
-			});
-		}
-		
-		if(userData.user._id == this.state.user._id){
-			userData.user.Role = value._id;
-			AsyncStorage.setItem('loginData', JSON.stringify(userData));
-		}
-		
 	}
 	
 	render() {
@@ -228,7 +233,6 @@ export default class EditUser extends Component {
 				<TextInput
 					ref="1"
 					style={styles.input}
-					value= {this.state.user.Email}
 					placeholder= "Email"
 					placeholderTextColor="rgba(0,0,0,0.7)"
 					returnKeyType="next"
@@ -242,7 +246,6 @@ export default class EditUser extends Component {
 				<TextInput
 					ref="2"
 					style={styles.input}
-					value= {this.state.user.FirstName}
 					placeholder= "First Name"
 					underlineColorAndroid = 'transparent'
 					placeholderTextColor="rgba(0,0,0,0.7)"
@@ -253,31 +256,54 @@ export default class EditUser extends Component {
 				<TextInput
 					ref="3"
 					style={styles.input}
-					value= {this.state.user.LastName}
 					placeholder= "Last Name"
 					underlineColorAndroid = 'transparent'
 					placeholderTextColor="rgba(0,0,0,0.7)"
+					onSubmitEditing={() => this.focusNextField('4')}
 					returnKeyType="next"
 					onChangeText={ (value) => this.updateLastName(value)}
 				/>
+				<TextInput
+					ref="4"
+					style={styles.input}
+					placeholder= "Password"
+					underlineColorAndroid = 'transparent'
+					secureTextEntry
+					autoCapitalize="none"
+					placeholderTextColor="rgba(0,0,0,0.7)"
+					onSubmitEditing={() => this.focusNextField('5')}
+					returnKeyType="next"
+					onChangeText={ (value) => this.updatePassword(value)}
+				/>
+				<TextInput
+					ref="5"
+					style={styles.input}
+					placeholder= "Repeat Password"
+					underlineColorAndroid = 'transparent'
+					secureTextEntry
+					autoCapitalize="none"
+					placeholderTextColor="rgba(0,0,0,0.7)"
+					returnKeyType="next"
+					onChangeText={ (value) => this.updateRepeatPassword(value)}
+				/>
+				<Text style= {this.state.matchingPasswords ? styles.errorTextHidden : styles.errorText}>Passwords should match!</Text>
 				<Picker
 					style={styles.input}
-					itemStyle = {this.state.canEditRoles ? styles.picker : styles.pickerDisabled}
 					mode="dropdown"
-					enabled = {this.state.canEditRoles}
 					selectedValue = {this.state.selectedRole}
 					onValueChange={(value) => this.updateRole(value)}>
-					<Picker.Item label={this.state.selectedRole.Name != undefined ? this.state.selectedRole.Name: "Please select a role..."} value={0} key={0} />
+					<Picker.Item label={"Please select a role..."} value={0} key={0} style={styles.picker}/>
 					{this.state.roles.map((item, index) => {
 						return (<Picker.Item label={item.Name} value={item} key={item} style={styles.picker}/>)
 						
                     })}
                 </Picker>
+				<Text style= {this.state.allFieldsHaveValue ? styles.errorTextHidden : styles.errorText}>All fields should be filled!</Text>
 				<TouchableOpacity
 					style={styles.buttonContainer}
 					onPress={this.saveUser}
 				>
-					<Text style={styles.buttonText}>Save changes</Text>
+					<Text style={styles.buttonText}>Create User</Text>
 				</TouchableOpacity>
 		  </KeyboardAvoidingView>
 	   )
@@ -332,12 +358,15 @@ const styles = StyleSheet.create ({
 		color: '#FFF',
 		fontWeight: '700'
 	},
+	errorText: {
+		color: '#fc0202',
+		marginBottom: 10
+	},
+	errorTextHidden: {
+		display: 'none'
+	},
 	picker:{
 		padding: 10,
 		textDecorationLine:'underline'
 	},
-	pickerDisabled:{
-		padding: 10,
-		color: '#dee3ea'
-	}
 })

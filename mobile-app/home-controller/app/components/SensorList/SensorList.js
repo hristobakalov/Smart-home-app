@@ -62,7 +62,6 @@ export default class SensorList extends Component {
 	
 	componentWillMount(){
 		var test = this._loadInitialState().done();
-		console.log(this.props.navigation.state.key);
 	}
 	
 	_loadInitialState = async() =>{
@@ -108,7 +107,7 @@ export default class SensorList extends Component {
 				keyExtractor={(item) => item._id}
 				renderItem ={({item}) =>
 					<View style = {styles.row}>
-						<Text style={{fontSize: 20}}>{item.Name}
+						<Text style={{fontSize: 22}}>{item.Name}
 						</Text>
 						<Switch
 							onValueChange = {() => this.switchSensor(item)}
@@ -138,7 +137,7 @@ const styles = StyleSheet.create ({
    },
    row:{
 	   flexDirection: 'row',
-	   marginBottom: 10
+	   marginBottom: 20
    },
    switch:{
 	   alignItems: 'flex-end'

@@ -12,6 +12,8 @@ import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import SensorList from './components/SensorList/SensorList'
 import UserList from './components/UserList/UserList'
 import EditUser from './components/EditUser/EditUser'
+import AddUser from './components/AddUser/AddUser'
+import EditSensors from './components/EditSensors/EditSensors'
 import DrawerView from './components/Drawer/Drawer'
 import UserApi from './lib/apiUser';
 
@@ -26,7 +28,9 @@ const Drawer = DrawerNavigator({
 	Home: {screen: Login},
 	Sensors: {screen: SensorList},
 	Users: {screen: UserList},
-	EditUser: {screen: EditUser}
+	EditUser: {screen: EditUser},
+	AddUser: {screen: AddUser},
+	EditSensors: {screen:EditSensors},
 },
 {
 	contentComponent: props => <DrawerView{...props}/>
@@ -34,6 +38,10 @@ const Drawer = DrawerNavigator({
 
 const Navigation = StackNavigator({
 	Home: {screen: Drawer},
+	Sensors: {screen: SensorList},
+	Users: {screen: UserList},
+	EditUser: {screen: EditUser},
+	AddUser: {screen: AddUser},
 	},{
 		navigationOptions: {
 			// header: false,

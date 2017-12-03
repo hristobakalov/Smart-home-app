@@ -38,12 +38,14 @@ var apiUser = {
 			})
 		.then((response) => response.json());
 	},
-	add(user){
+	add(user,token, username){
 		return fetch(userApiUrl, {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			},
 			body: JSON.stringify(user)})
 		.then((response) => response.json());

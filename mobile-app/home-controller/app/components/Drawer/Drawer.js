@@ -10,21 +10,44 @@ import {
    TouchableOpacity,
 } 
 from 'react-native'
-
+import Settings from '../../config/roles';
 import SensorApi from '../../lib/apiSensor';
-import {StackNavigator} from 'react-navigation'
+import {StackNavigator} from 'react-navigation';
 
 export default class SensorList extends Component {
-	
 	static navigationOptions= {
 		title: 'Menu',
 	};
-	
+	constructor (props){
+		super(props);
+		this.state = {
+			userData: {},
+			canAddUsers: false,
+		};
+	}
+	componentWillMount(){
+		var init = this._loadInitialState().done();
+	}
 	logout = () => {
 		console.log('logout');
 		AsyncStorage.removeItem('loginData');
 		
 		this.props.navigation.navigate('Home');
+	}
+	_loadInitialState = async() =>{
+		try {
+		   let value = await AsyncStorage.getItem('loginData');
+		   if (value != null){
+			  var loginData = JSON.parse(value);
+			  this.setState({userData: loginData});
+			  this.setState({canAddUsers: loginData.user.Role == Settings.Administrator});
+		   }
+		   else {
+			  console.log("Users: something smells here");
+		  }
+		} catch (error) {
+		  console.log("Users: something blew up");
+		}
 	}
 	
 	render() {
@@ -47,6 +70,20 @@ export default class SensorList extends Component {
 			</TouchableOpacity>
 			
 			<TouchableOpacity
+				style = {styles.row}
+				onPress={()=> navigate('EditSensors')}
+			>
+				<Text style = {styles.menuOption}>Edit Sensors</Text>
+			</TouchableOpacity>
+			
+			<TouchableOpacity
+				style = {this.state.canAddUsers ? styles.row : styles.rowHidden}
+				onPress={()=> navigate('AddUser')}
+			>
+				<Text style = {styles.menuOption}>Add User</Text>
+			</TouchableOpacity>
+			
+			<TouchableOpacity
 				style={styles.buttonContainer}
 				onPress={this.logout}
 			>
@@ -66,6 +103,9 @@ const styles = StyleSheet.create ({
    row:{
 	   flexDirection: 'row',
 	   marginBottom: 20
+   },
+   rowHidden: {
+	   display: 'none'
    },
    button:{
 	   marginBottom: 20,

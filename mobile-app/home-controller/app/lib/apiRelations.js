@@ -93,6 +93,19 @@ var apiRelations = {
 		.then((response) => response.json());
 	},
 	
+	getAllRoleSensorRelations( token, username){
+		var url = sensorRoleUrl  + 'sensor';
+		return fetch(url, {
+			method: "GET",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
+			},
+		})
+		.then((response) => response.json());
+	},
 };
 
 module.exports = apiRelations;
