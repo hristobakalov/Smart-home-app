@@ -13,8 +13,8 @@ db.on('error', function () {
 
 var app = express();
 var fs = require('fs');
-var key = fs.readFileSync('./encryption/server.key');
-var cert = fs.readFileSync( './encryption/server.crt' );
+var key = fs.readFileSync('./encryption/smart-app-key.pem');
+var cert = fs.readFileSync( './encryption/smart-app-cert.pem' );
 //var ca = fs.readFileSync( './encryption/intermediate.crt' );
 
 var options = {

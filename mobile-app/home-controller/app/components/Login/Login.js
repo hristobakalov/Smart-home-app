@@ -42,6 +42,7 @@ export default class Login extends Component {
 		this.refs[nextField].focus();
 	}
 	login = () => {
+		console.log(Settings.baseUrl);
 		fetch(Settings.baseUrl + 'login',{
 			method: 'POST',
 			headers:{
@@ -55,6 +56,7 @@ export default class Login extends Component {
 		})
 		.then((response) => response.json())
 		.then((res) => {
+			console.log(res);
 			if(!res.message){
 				AsyncStorage.setItem('loginData', JSON.stringify(res.loginData));
 				this.props.navigation.navigate('Sensors');
