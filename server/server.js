@@ -12,6 +12,16 @@ db.on('error', function () {
 });
 
 var app = express();
+var fs = require('fs');
+var key = fs.readFileSync('./encryption/server.key');
+var cert = fs.readFileSync( './encryption/server.crt' );
+//var ca = fs.readFileSync( './encryption/intermediate.crt' );
+
+var options = {
+  key: key,
+  cert: cert,
+  //ca: ca
+};
 
  //parsing to handle post requests
 // app.configure(function(){
@@ -61,6 +71,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-app.listen(3001);
+var https = require('https');
+https.createServer(options, app).listen(3001);
 console.log('Listening on port 3001...');
