@@ -59,7 +59,8 @@ var auth = {
 				  });
 				return false;
 			}
-			if(!user || password != user.Password)
+			
+			if(!user)
 			{
 				console.log('Invalid credentials');
 				 res.status(401);
@@ -69,26 +70,8 @@ var auth = {
 				  });
 				return false;
 			}
-			//user ["Role"] = "Administrator"; //temporary hardcoded role;
-			var resultObj = user.toObject();
-				resultObj.Role ="Administrator";
-			UserRoleRelations.findOne({'UserId':resultObj._id},function(err, relation) {
-				if (err){
-				   console.log("user relation failer: ", err);
-				   res.json({
-					"status": 500,
-					"message": "Something wrong with relations"
-				  });
-				   return false;
-				}
-				if(!relation){
-				  console.log("user relation not found");
-				}
-				resultObj.Role =relation.RoleId;
-				res.json(genToken(resultObj));
-				console.log(resultObj);
-				return resultObj;
-			});
+			helpers.comparePassword(password, user.Password, comparyPasswords)
+			
 			
 	});
     // var dbUserObj = { // spoofing a userobject from the DB. 
@@ -175,5 +158,34 @@ function comparyPasswords(err, arePasswordsMatching){
 		console.log(err);
 	
 	console.log(arePasswordsMatching);
+	if(!arePasswordsMatching || err){
+		console.log('Invalid credentials');
+				 res.status(401);
+				res.json({
+					"status": 401,
+					"message": "Invalid credentials"
+				  });
+				return false;
+	}
+	//user ["Role"] = "Administrator"; //temporary hardcoded role;
+			var resultObj = user.toObject();
+				resultObj.Role ="Administrator";
+			UserRoleRelations.findOne({'UserId':resultObj._id},function(err, relation) {
+				if (err){
+				   console.log("user relation failer: ", err);
+				   res.json({
+					"status": 500,
+					"message": "Something wrong with relations"
+				  });
+				   return false;
+				}
+				if(!relation){
+				  console.log("user relation not found");
+				}
+				resultObj.Role =relation.RoleId;
+				res.json(genToken(resultObj));
+				console.log(resultObj);
+				return resultObj;
+			});
 }
 module.exports = auth;
