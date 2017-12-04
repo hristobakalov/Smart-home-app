@@ -168,7 +168,7 @@ function comparyPasswords(err, arePasswordsMatching){
 				return false;
 	}
 	//user ["Role"] = "Administrator"; //temporary hardcoded role;
-			var resultObj = user.toObject();
+			var resultObj = user;
 				resultObj.Role ="Administrator";
 			UserRoleRelations.findOne({'UserId':resultObj._id},function(err, relation) {
 				if (err){
