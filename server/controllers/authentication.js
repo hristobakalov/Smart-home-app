@@ -88,6 +88,7 @@ var auth = {
 			//user ["Role"] = "Administrator"; //temporary hardcoded role;
 				var resultObj = user.toObject();
 					resultObj.Role ="Administrator";
+					delete resultObj.Password;
 				UserRoleRelations.findOne({'UserId':resultObj._id},function(err, relation) {
 					if (err){
 					   console.log("user relation failer: ", err);
