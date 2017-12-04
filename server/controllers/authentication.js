@@ -70,7 +70,7 @@ var auth = {
 				  });
 				return false;
 			}
-			helpers.comparePassword(password, user.Password, comparyPasswords)
+			helpers.comparePassword(password, user.Password, comparyPasswords, res)
 			
 			
 	});
@@ -153,7 +153,7 @@ function encryptedPassword(err, hash){
 	console.log(hash);
 }
 
-function comparyPasswords(err, arePasswordsMatching){
+function comparyPasswords(err, arePasswordsMatching, res){
 	if(err)
 		console.log(err);
 	
