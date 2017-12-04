@@ -77,7 +77,7 @@ export default class SensorList extends Component {
 			</TouchableOpacity>
 			
 			<TouchableOpacity
-				style = {this.state.canAddUsers ? styles.row : styles.rowHidden}
+				style = {styles.row}
 				onPress={()=> navigate('AddUser')}
 			>
 				<Text style = {styles.menuOption}>Add User</Text>
