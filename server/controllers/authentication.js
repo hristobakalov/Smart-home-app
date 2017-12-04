@@ -23,7 +23,7 @@ var auth = {
     }
 	
 	helpers.cryptPassword(password, encryptedPassword);
-	
+	helpers.compare(password, '$2a$10$aHMmBjBFTcBCL6wO.pGrTONmXHvVu/ikBESc99q8HIBgg4tr1E22y', comparyPasswords)
     // Fire a query to your DB and check if the credentials are valid
     var dbUserObj = auth.validate(username, password, res);
 	
@@ -168,5 +168,12 @@ function encryptedPassword(err, hash){
 		console.log(err);
 	
 	console.log(hash);
+}
+
+function comparyPasswords(err, arePasswordsMatching){
+	if(err)
+		console.log(err);
+	
+	console.log(arePasswordsMatching);
 }
 module.exports = auth;
