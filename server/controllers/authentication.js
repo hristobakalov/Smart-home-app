@@ -70,7 +70,42 @@ var auth = {
 				  });
 				return false;
 			}
-			helpers.comparePassword(password, user.Password, comparyPasswords, res, genToken)
+			helpers.comparePassword(password, user.Password, (err, arePasswordsMatching) => {
+						if(err)
+				console.log(err);
+			
+			console.log(arePasswordsMatching);
+			if(!arePasswordsMatching || err){
+				console.log('Invalid credentials');
+						 res.status(401);
+						res.json({
+							"status": 401,
+							"message": "Invalid credentials"
+						  });
+						return false;
+			}
+			//user ["Role"] = "Administrator"; //temporary hardcoded role;
+					var resultObj = user;
+						resultObj.Role ="Administrator";
+					UserRoleRelations.findOne({'UserId':resultObj._id},function(err, relation) {
+						if (err){
+						   console.log("user relation failer: ", err);
+						   res.json({
+							"status": 500,
+							"message": "Something wrong with relations"
+						  });
+						   return false;
+						}
+						if(!relation){
+						  console.log("user relation not found");
+						}
+						resultObj.Role =relation.RoleId;
+						console.log(resultObj);
+						res.json(genToken(resultObj));
+						console.log(resultObj);
+						return resultObj;
+					});
+			})
 			
 			
 	});
@@ -175,7 +210,7 @@ function comparyPasswords(err, arePasswordsMatching, res, genToken){
 
 // private method
 function genToken(user) {
-  var jwt = require('jwt-simple');
+  //var jwt = require('jwt-simple');
   var expires = expiresIn(14); // 14 days
   var token = jwt.encode({
     exp: expires
