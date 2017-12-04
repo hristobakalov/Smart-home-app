@@ -124,24 +124,6 @@ var auth = {
   },
 }
  
-// private method
-function genToken(user) {
-  var jwt = require('jwt-simple');
-  var expires = expiresIn(14); // 14 days
-  var token = jwt.encode({
-    exp: expires
-  }, require('../config/secret')());
- 
-  return {
-	  loginData:{
-		    token: token,
-			expires: expires,
-			user: user
-	  }
-   
-  };
-}
- 
 function expiresIn(numDays) {
   var dateObj = new Date();
   return dateObj.setDate(dateObj.getDate() + numDays);
@@ -184,9 +166,28 @@ function comparyPasswords(err, arePasswordsMatching, res, genToken){
 				  console.log("user relation not found");
 				}
 				resultObj.Role =relation.RoleId;
+				console.log(resultObj);
 				res.json(genToken(resultObj));
 				console.log(resultObj);
 				return resultObj;
 			});
+}
+
+// private method
+function genToken(user) {
+  var jwt = require('jwt-simple');
+  var expires = expiresIn(14); // 14 days
+  var token = jwt.encode({
+    exp: expires
+  }, require('../config/secret')());
+ console.log(token);
+  return {
+	  loginData:{
+		    token: token,
+			expires: expires,
+			user: user
+	  }
+   
+  };
 }
 module.exports = auth;
