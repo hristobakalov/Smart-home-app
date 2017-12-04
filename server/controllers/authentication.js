@@ -1,6 +1,7 @@
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var constants = require('../constants');
+var helpers = require('../utils');
 var connection = mongoose.createConnection(constants.DBUrl);
 
 User = connection.model('User');
@@ -20,7 +21,9 @@ var auth = {
       });
       return;
     }
- 
+	
+	helpers.cryptPassword(password, encryptedPassword);
+	
     // Fire a query to your DB and check if the credentials are valid
     var dbUserObj = auth.validate(username, password, res);
 	
@@ -160,4 +163,10 @@ function expiresIn(numDays) {
   return dateObj.setDate(dateObj.getDate() + numDays);
 }
  
+function encryptedPassword(err, hash){
+	if(err)
+		console.log(err);
+	
+	console.log(hash);
+}
 module.exports = auth;
