@@ -85,7 +85,7 @@ var auth = {
 						return false;
 			}
 			//user ["Role"] = "Administrator"; //temporary hardcoded role;
-					var resultObj = user;
+					var resultObj = user.toObject();
 						resultObj.Role ="Administrator";
 					UserRoleRelations.findOne({'UserId':resultObj._id},function(err, relation) {
 						if (err){
