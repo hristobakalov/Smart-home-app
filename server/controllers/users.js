@@ -52,7 +52,7 @@ exports.update = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
 	delete updates._id;
-	if(updates.Password){
+	if(updates.Password != undefined && updates.Password != ''){
 		helpers.cryptPassword(updates.Password, (err, hash) => {
 			if(err){
 				console.log(err);
