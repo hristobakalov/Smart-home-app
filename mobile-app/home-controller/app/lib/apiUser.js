@@ -61,7 +61,7 @@ var apiUser = {
 			},
 			body: JSON.stringify(user)})
 		.then((response) => response.json());
-	}
+	},
 	delete(id, token, username){
 		return fetch(userApiUrl + id, {
 			method: "DELETE",
@@ -70,7 +70,7 @@ var apiUser = {
 				'Content-Type': 'application/json',
 				'x-access-token': token,
 				'x-key': username
-			}
+			}})
 		.then((response) => response.json());
 	}
 };

@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+	var mongoose = require('mongoose');
 var constants = require('../constants');
 var connection = mongoose.createConnection(constants.DBUrl);
 var helpers = require('../utils');
@@ -68,13 +68,15 @@ exports.update = function(req, res) {
 			});
 		})
 	}
-  User.update({"_id":id}, req.body,
-    function (err, numberAffected) {
-      if (err) return console.log(err);
-      console.log('Updated User: ');
-	  console.log(numberAffected);
-      res.send(202);
-  });
+	else{
+	  User.update({"_id":id}, req.body,
+		function (err, numberAffected) {
+		  if (err) return console.log(err);
+		  console.log('Updated User: ');
+		  console.log(numberAffected);
+		  res.send(202);
+	  });
+  }
 }
 exports.delete = function(req, res){
   var id = req.params.id;

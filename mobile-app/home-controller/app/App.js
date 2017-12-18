@@ -32,6 +32,7 @@ const Drawer = DrawerNavigator({
 	EditUser: {screen: EditUser},
 	AddUser: {screen: AddUser},
 	EditSensors: {screen:EditSensors},
+	AddSensor: {screen:AddSensor},
 },
 {
 	contentComponent: props => <DrawerView{...props}/>

@@ -74,6 +74,7 @@ export default class Login extends Component {
 		}
 		console.log('new main ip is: ', value);
 		Settings.baseUrl = value;
+		console.log(Settings.baseUrl);
 		
 		this.pingUrl(value);
 	}
@@ -88,19 +89,26 @@ export default class Login extends Component {
 		this.pingUrl(value);
 	}
 	
-	pingUrl = (value){
-		fetch(value,{
-			method: 'GET',
-			headers:{
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			}
-		})
-		.then((response) => response.json())
-		.then((res) => {
-			console.log(res);
-		})
-		.done();
+	pingUrl = (value) =>{
+		try{
+			fetch(value,{
+				method: 'GET',
+				headers:{
+					'Content-Type': 'application/json',
+				}
+			})
+			.then((res) => {
+				if(res){
+					console.log(res._bodyText == "Pong");
+				}
+				else{
+					alert("Ping failed");
+				}
+			})
+		}
+		catch(err){
+			alert("Ping failed");
+		}
 	}
 	render() {
 		const {navigate} = this.props.navigation;
@@ -122,7 +130,7 @@ export default class Login extends Component {
 							ref="1"
 							style={styles.input}
 							placeholder= "Host IP/Domain"
-							value={this.Settings.baseUrl}
+							value={Settings.baseUrl}
 							placeholderTextColor="rgba(255,255,255,0.7)"
 							returnKeyType="next"
 							autoCorrect={false}
@@ -134,7 +142,7 @@ export default class Login extends Component {
 							ref="2"
 							style={styles.input}
 							placeholder= "Alternative IP/Domain"
-							value={this.Settings.baseWebUrl}
+							value={Settings.baseWebUrl}
 							placeholderTextColor="rgba(255,255,255,0.7)"
 							returnKeyType="next"
 							autoCapitalize="none"
