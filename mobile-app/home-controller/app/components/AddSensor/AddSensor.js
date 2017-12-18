@@ -28,14 +28,15 @@ export default class AddSensor extends Component {
 			sensor: {},
 			userData: {},
 			isOutputArr: ['True','False'],
-			allFieldsHaveValue: true
+			allFieldsHaveValue: true,
+			selectedValue: ""
 		};
 	}
 	
 	saveSensor = () => {
 		console.log("Saving Sensor");
 		var sensor = this.state.sensor;
-		
+		console.log(sensor);
 		if(!sensor || sensor.Name == undefined || sensor.PinNumber == undefined || 
 		sensor.IsOutput == undefined)
 		{
@@ -48,15 +49,13 @@ export default class AddSensor extends Component {
 		
 		SensorApi.add(sensor, userData.token, userData.user.Email)
 		.then((res, err) => {
-			if(err){
+			if(err || res.status == 401){
 				 alert(err);
 				 return;
 			 }
 			 if(res._id){
 				//sensor create successfully
-				
-				console.log(res);
-				//Make Toast here
+				this.props.navigation.navigate('Sensors');
 			 }
 			 else{
 				 console.log('kor kapan: Sensor was not created successfully');
@@ -123,13 +122,15 @@ export default class AddSensor extends Component {
 		this.forceUpdate();
 	}
 	updateIsOutput(value){
-		if(value == null || value == 0){
+		console.log(value);
+		if(value === null || value === 0){
 			return;
 		}
-		
+		console.log(value);
 		const sensor = this.state.sensor;
 		sensor.IsOutput = value;
 		// re-render
+		this.setState({selectedValue: value});
 		this.forceUpdate();
 	}
 	
@@ -158,14 +159,14 @@ export default class AddSensor extends Component {
 					returnKeyType="next"
 					onChangeText={ (value) => this.updatePinNumber(value)}
 				/>
-				<Text>Is sensor output:</Text>
 				<Picker
 					style={styles.input}
 					mode="dropdown"
-					selectedValue = {this.state.selectedRole}
+					selectedValue = {this.state.selectedValue}
 					onValueChange={(value) => this.updateIsOutput(value)}>
-					<Picker.Item label={"True"} value={true} key={0} style={styles.picker}/>
-					<Picker.Item label={"False"} value={false} key={1} style={styles.picker}/>
+					<Picker.Item label={"Select if sensor is output or input"} value={0} key={0} style={styles.picker}/>
+					<Picker.Item label={"Output"} value={true} key={1} style={styles.picker}/>
+					<Picker.Item label={"Input"} value={false} key={2} style={styles.picker}/>
                 </Picker>
 				<Text style= {this.state.allFieldsHaveValue ? styles.errorTextHidden : styles.errorText}>All fields should be filled!</Text>
 				<TouchableOpacity
