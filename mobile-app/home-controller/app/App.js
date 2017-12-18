@@ -13,6 +13,7 @@ import SensorList from './components/SensorList/SensorList'
 import UserList from './components/UserList/UserList'
 import EditUser from './components/EditUser/EditUser'
 import AddUser from './components/AddUser/AddUser'
+import AddSensor from './components/AddSensor/AddSensor'
 import EditSensors from './components/EditSensors/EditSensors'
 import DrawerView from './components/Drawer/Drawer'
 import UserApi from './lib/apiUser';
@@ -42,6 +43,7 @@ const Navigation = StackNavigator({
 	Users: {screen: UserList},
 	EditUser: {screen: EditUser},
 	AddUser: {screen: AddUser},
+	AddSensor: {screen: AddSensor},
 	},{
 		navigationOptions: {
 			// header: false,

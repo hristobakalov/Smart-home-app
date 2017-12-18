@@ -40,9 +40,16 @@ export default class UserList extends Component {
 	// }
 	
 	editUser = (user) => {
-		console.log("PRESED");
+		console.log("edit user");
 		
 		this.props.navigation.navigate('EditUser', {user: user});
+	}
+	deleteUser = (user) => {
+		console.log("Delete user");
+		var userData = this.state.userData;
+		UserApi.delete(user._id, userData.token, userData.user.Email);
+		//might want to delete this user from the users array
+		this.forceUpdate();
 	}
 	componentWillMount(){
 		var test = this._loadInitialState().done();
@@ -102,6 +109,18 @@ export default class UserList extends Component {
 							style={styles.pensil}
 							source={require('../../images/pensil.png')}
 						/>
+						<TouchableOpacity
+							activeOpacity={0.4}
+							style = {this.state.pressStatus ? styles.buttonPress : styles.row}
+							onPress={() => {this.deleteUser(item)}}
+							
+							underlayColor ='#3498db'
+						>
+							<Image
+								style={styles.pensil}
+								source={require('../../images/pensil.png')}
+							/>
+						</TouchableOpacity>
 					</TouchableOpacity>
 				}
 			/>

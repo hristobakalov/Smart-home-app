@@ -84,11 +84,19 @@ export default class SensorList extends Component {
 			</TouchableOpacity>
 			
 			<TouchableOpacity
+				style = {styles.row}
+				onPress={()=> navigate('AddSensor')}
+			>
+				<Text style = {styles.menuOption}>Add Sensor</Text>
+			</TouchableOpacity>
+			
+			<TouchableOpacity
 				style={styles.buttonContainer}
 				onPress={this.logout}
 			>
 				<Text style={styles.buttonText}>LOGOUT</Text>
 			</TouchableOpacity>
+			
 		  </View>
 	   )
 	}

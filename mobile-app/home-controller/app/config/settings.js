@@ -1,5 +1,5 @@
 var baseUrls = {
-	baseUrl: 'https://192.168.0.105:3001/',
+	baseUrl: 'http://192.168.1.162:3001/',
 	baseWebUrl: 'https://smarthomeapp.tunnel.me'
 };
 
