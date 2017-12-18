@@ -37,6 +37,7 @@ export default class Login extends Component {
 		if(valueObj !== null && valueObj.expires > Date.now()){
 			this.props.navigation.navigate('Sensors');
 		}
+		
 	}
 	focusNextField(nextField) {
 		this.refs[nextField].focus();
