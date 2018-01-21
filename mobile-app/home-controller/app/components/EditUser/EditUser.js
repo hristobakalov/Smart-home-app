@@ -221,7 +221,6 @@ export default class EditUser extends Component {
 	}
 	
 	render() {
-		console.log(this.state.user);
 	   return (
 		  <KeyboardAvoidingView behavior="padding" style={styles.container}>
 				<StatusBar
