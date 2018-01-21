@@ -68,6 +68,7 @@ export default class EditUser extends Component {
 	}
 	componentWillMount(){
 		this.setState({user: this.props.navigation.state.params.user});
+		
 		var test = this._loadInitialState().done(()=>{
 			var userData = this.state.userData;
 			
@@ -220,6 +221,7 @@ export default class EditUser extends Component {
 	}
 	
 	render() {
+		console.log(this.state.user);
 	   return (
 		  <KeyboardAvoidingView behavior="padding" style={styles.container}>
 				<StatusBar

@@ -6,9 +6,13 @@ var helpers = require('../utils');
 User = connection.model('User');
 exports.findAll = function(req, res){
   User.find({},function(err, results) {
-	  if(err){
+		if(err){
 		  res.sendStatus(500);
-	  }
+		}
+	  //need to iterate over each result item and delete the password
+		for (var i = 0; i < results.length; i++){
+		  delete results[i].Password;
+		}
 	  // results.forEach()
     return res.send(results);
   });
@@ -19,13 +23,17 @@ exports.connectionCheck = function(req,res){
 exports.findById = function(req, res){
   var id = req.params.id;
   User.findOne({'_id':id},function(err, result) {
-    return res.send(result);
+	var resultObj = result.toObject();
+	delete resultObj.Password;
+    return res.send(resultObj);
   });
 };
 exports.findByEmail = function(req, res){
   var email = req.params.email;
   User.findOne({'Email':email},function(err, result) {
-    return res.send(result);
+	var resultObj = result.toObject();
+	delete resultObj.Password;
+    return res.send(resultObj);
   });
 };
 exports.add = function(req, res) {
