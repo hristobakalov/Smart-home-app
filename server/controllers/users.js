@@ -11,7 +11,9 @@ exports.findAll = function(req, res){
 		}
 	  //need to iterate over each result item and delete the password
 		for (var i = 0; i < results.length; i++){
-		  delete results[i].Password;
+			var currUser = results[i];
+			delete currUser.Password;
+			results[i] = currUser;
 		}
 	  // results.forEach()
     return res.send(results);
