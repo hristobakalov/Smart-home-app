@@ -83,6 +83,17 @@ var apiSensor = {
 		// .then((responseData) => {console.log(responseData)})
 		// .catch(function(err) {console.log(err)});
 		
+	},
+	delete(id, token, username){
+		return fetch(sensorsApiUrl + id, {
+			method: "DELETE",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
+			}})
+		.then((response) => response.json());
 	}
 };
 

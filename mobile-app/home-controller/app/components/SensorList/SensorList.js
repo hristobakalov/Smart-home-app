@@ -6,13 +6,16 @@ import {
    StyleSheet,
    FlatList,
    AsyncStorage,
-   Button
+   Button,
+   TouchableOpacity,
+   Image
 } 
 from 'react-native'
 
 import SensorApi from '../../lib/apiSensor';
 import RelationApi from '../../lib/apiRelations';
-import {StackNavigator} from 'react-navigation'
+import {StackNavigator} from 'react-navigation';
+import Settings from '../../config/roles';
 
 export default class SensorList extends Component {
 	
@@ -24,7 +27,8 @@ export default class SensorList extends Component {
 		this.state = {
 			sensors: [],
 			shouldRefresh: false,
-			userData: {}
+			userData: {},
+			isUserAdministrator: false
 		};
 	}
 	SwitchValue = (sensor) => {
@@ -56,6 +60,18 @@ export default class SensorList extends Component {
 			console.log(err);
 		}
 	}
+	
+	deleteSensor = (sensor) => {
+		console.log("Delete sensor");
+		var userData = this.state.userData;
+		SensorApi.delete(sensor._id, userData.token, userData.user.Email);
+		//might want to delete this user from the users array
+		 this.setState({
+			sensors: this.state.sensors.filter((item) => item._id != sensor._id)
+		  });
+		this.forceUpdate();
+	}
+	
 	navigateToUserScreen = () => {
 		this.props.navigation.navigate('Users');
 	}
@@ -71,11 +87,14 @@ export default class SensorList extends Component {
 			  var loginData = JSON.parse(value);
 			  
 			  this.setState({userData: loginData});
-			  if(loginData.user.Role == "Administrator"){
-				  return;
+			  if(loginData.user.Role == Settings.Administrator){
+				  this.setState({isUserAdministrator: true});
+				  console.log('Setting state!!!: ',this.state.isUserAdministrator);
+				  // this.forceUpdate();
+				  // this._animate();
 			  }
 			  RelationApi.getSensorsByRoleId(loginData.user.Role , loginData.token, loginData.user.Email).then((res) => {
-					console.log(res);
+					//console.log(res);
 					this.setState({sensors: res})
 				});
 			  // SensorApi.getAll(loginData.token, loginData.user.Email).then((res) => {
@@ -99,6 +118,7 @@ export default class SensorList extends Component {
 	
 	
 	render() {
+	console.log('Loading view: ',this.state.isUserAdministrator);
 	   return (
 		  <View style = {styles.container}>
 			<FlatList 
@@ -107,13 +127,25 @@ export default class SensorList extends Component {
 				keyExtractor={(item) => item._id}
 				renderItem ={({item}) =>
 					<View style = {styles.row}>
-						<Text style={{fontSize: 22}}>{item.Name}
+						<Text style={styles.text}>{item.Name}
 						</Text>
 						<Switch
 							onValueChange = {() => this.switchSensor(item)}
 							value = {item.IsEnabled}
 							style= {styles.switch}
 						/>
+						<TouchableOpacity
+							activeOpacity={0.4}
+							style = {this.state.isUserAdministrator ? styles.trashIcon : styles.hidden}
+							onPress={() => {this.deleteSensor(item)}}
+							
+							underlayColor ='#3498db'
+						>
+							<Image
+								style={styles.trash}
+								source={require('../../images/trash-can.png')}
+							/>
+						</TouchableOpacity>
 					</View>
 				}
 			/>
@@ -145,5 +177,23 @@ const styles = StyleSheet.create ({
    button:{
 	   marginBottom: 20,
 	   color: "#3498db"
+   },
+    hidden:{
+		display: 'none'
+   },
+   trashIcon: {
+	   marginLeft: 20,
+	   height: 30,
+	   width:30
+   },
+   trash:{
+	   // marginLeft: 10,
+	   alignItems: 'flex-end',
+	   width:30,
+	   height:30
+   },
+   text: {
+	   fontSize: 22,
+	   minWidth: 130
    }
 })

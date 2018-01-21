@@ -74,7 +74,8 @@ var auth = {
 				if(err)
 				console.log(err);
 			
-				console.log(arePasswordsMatching);
+				console.log('Compared passwords passed by user: ', password);
+				console.log('Compared passwords passed by databse: ', user.Password);
 				if(!arePasswordsMatching || err){
 					console.log('Invalid credentials');
 					res.status(401);
