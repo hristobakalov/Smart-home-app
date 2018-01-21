@@ -70,13 +70,25 @@ var auth = {
 				  });
 				return false;
 			}
+			helpers.cryptPassword(password, (err, hash) => {
+				if(err){
+					console.log(err);
+				}
+				user.Password = hash;
+				User.update({"_id":user._id}, user,
+				function (err, numberAffected) {
+					  if (err) return console.log(err);
+					  console.log('Updated User: ');
+					  console.log(numberAffected);
+				});
+			})
 			helpers.comparePassword(password, user.Password, (err, arePasswordsMatching) => {
 				if(err)
 				console.log(err);
 			
 				console.log('Compared passwords passed by user: ', password);
-				console.log('Compared passwords passed by databse: ', user.Password);
 				if(!arePasswordsMatching || err){
+					
 					console.log('Invalid credentials');
 					res.status(401);
 					res.json({

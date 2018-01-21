@@ -57,6 +57,7 @@ exports.update = function(req, res) {
 			if(err){
 				console.log(err);
 			}
+			console.log("User with password is being updated: ",updates);
 			updates.Password = hash;
 			User.update({"_id":id}, req.body,
 			function (err, numberAffected) {
