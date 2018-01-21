@@ -75,7 +75,9 @@ var auth = {
 					console.log(err);
 				}
 				user.Password = hash;
-				User.update({"_id":user._id}, user,
+				var resultObj = user.toObject();
+				delete resultObj._id;
+				User.update({"_id":user._id}, resultObj,
 				function (err, numberAffected) {
 					  if (err) return console.log(err);
 					  console.log('Updated User: ');
