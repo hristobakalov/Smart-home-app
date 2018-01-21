@@ -70,20 +70,21 @@ var auth = {
 				  });
 				return false;
 			}
-			helpers.cryptPassword(password, (err, hash) => {
-				if(err){
-					console.log(err);
-				}
-				user.Password = hash;
-				var resultObj = user.toObject();
-				delete resultObj._id;
-				User.update({"_id":user._id}, resultObj,
-				function (err, numberAffected) {
-					  if (err) return console.log(err);
-					  console.log('Updated User: ');
-					  console.log(numberAffected);
-				});
-			})
+			//only used for cases in which the password of a user is lost!
+			// helpers.cryptPassword(password, (err, hash) => {
+				// if(err){
+					// console.log(err);
+				// }
+				// user.Password = hash;
+				// var resultObj = user.toObject();
+				// delete resultObj._id;
+				// User.update({"_id":user._id}, resultObj,
+				// function (err, numberAffected) {
+					  // if (err) return console.log(err);
+					  // console.log('Updated User: ');
+					  // console.log(numberAffected);
+				// });
+			// })
 			helpers.comparePassword(password, user.Password, (err, arePasswordsMatching) => {
 				if(err)
 				console.log(err);
