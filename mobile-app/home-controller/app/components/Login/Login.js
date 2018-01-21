@@ -68,7 +68,48 @@ export default class Login extends Component {
 		})
 		.done();
 	}
+	updateIP = (value) =>{
+		if(!value || value == undefined){
+			return;
+		}
+		console.log('new main ip is: ', value);
+		Settings.baseUrl = value;
+		console.log(Settings.baseUrl);
+		
+		this.pingUrl(value);
+	}
 	
+	updateAlternativeIP = (value) =>{
+		if(!value || value == undefined){
+			return;
+		}
+		console.log('new alternative ip is: ', value);
+		Settings.baseWebUrl = value;
+		
+		this.pingUrl(value);
+	}
+	
+	pingUrl = (value) =>{
+		try{
+			fetch(value,{
+				method: 'GET',
+				headers:{
+					'Content-Type': 'application/json',
+				}
+			})
+			.then((res) => {
+				if(res){
+					console.log(res._bodyText == "Pong");
+				}
+				else{
+					alert("Ping failed");
+				}
+			})
+		}
+		catch(err){
+			alert("Ping failed");
+		}
+	}
 	render() {
 		const {navigate} = this.props.navigation;
 		return (
@@ -84,8 +125,35 @@ export default class Login extends Component {
 					<StatusBar
 						barStyle="light-content"
 					/>
+					<View style={styles.containerIps}>
+						<TextInput
+							ref="1"
+							style={styles.input}
+							placeholder= "Host IP/Domain"
+							value={Settings.baseUrl}
+							placeholderTextColor="rgba(255,255,255,0.7)"
+							returnKeyType="next"
+							autoCorrect={false}
+							underlineColorAndroid = 'transparent'
+							onSubmitEditing={() => this.focusNextField('2')}
+							onChangeText={ (value) => this.updateIP(value)}
+						/>
+						<TextInput
+							ref="2"
+							style={styles.input}
+							placeholder= "Alternative IP/Domain"
+							value={Settings.baseWebUrl}
+							placeholderTextColor="rgba(255,255,255,0.7)"
+							returnKeyType="next"
+							autoCapitalize="none"
+							autoCorrect={false}
+							underlineColorAndroid = 'transparent'
+							onSubmitEditing={() => this.focusNextField('3')}
+							onChangeText={ (value) => this.updateAlternativeIP(value)}
+						/>
+					</View>
 					<TextInput
-						ref="1"
+						ref="3"
 						style={styles.input}
 						placeholder= "username or email"
 						placeholderTextColor="rgba(255,255,255,0.7)"
@@ -94,11 +162,11 @@ export default class Login extends Component {
 						autoCapitalize="none"
 						autoCorrect={false}
 						underlineColorAndroid = 'transparent'
-						onSubmitEditing={() => this.focusNextField('2')}
+						onSubmitEditing={() => this.focusNextField('4')}
 						onChangeText={ (username) => this.setState({username})}
 					/>
 					<TextInput
-						ref="2"
+						ref="4"
 						style={styles.input}
 						placeholder= "password"
 						secureTextEntry
@@ -125,6 +193,9 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#3498db'
+	},
+	containerIps:{
+		marginBottom: 30,
 	},
 	logoContainer: {
 		alignItems: 'center',

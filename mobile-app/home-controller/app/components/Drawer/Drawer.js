@@ -22,11 +22,18 @@ export default class SensorList extends Component {
 		super(props);
 		this.state = {
 			userData: {},
-			canAddUsers: false,
+			isAdministrator: false,
 		};
 	}
 	componentWillMount(){
-		var init = this._loadInitialState().done();
+		console.log('I am loading the drawer!');
+		var init = this._loadInitialState().done(() => {
+			var loginData = this.state.userData;
+			console.log('IsLoggedIn user an Administrator:' ,  loginData.user.Role == Settings.Administrator);
+				  
+			this.setState({isAdministrator: loginData.user.Role == Settings.Administrator});
+		});
+		
 	}
 	logout = () => {
 		console.log('logout');
@@ -40,7 +47,7 @@ export default class SensorList extends Component {
 		   if (value != null){
 			  var loginData = JSON.parse(value);
 			  this.setState({userData: loginData});
-			  this.setState({canAddUsers: loginData.user.Role == Settings.Administrator});
+			  
 		   }
 		   else {
 			  console.log("Users: something smells here");
@@ -77,10 +84,17 @@ export default class SensorList extends Component {
 			</TouchableOpacity>
 			
 			<TouchableOpacity
-				style = {this.state.canAddUsers ?styles.row: styles.rowHidden}
+				style = {this.state.isAdministrator? styles.row : styles.rowHidden}
 				onPress={()=> navigate('AddUser')}
 			>
 				<Text style = {styles.menuOption}>Add User</Text>
+			</TouchableOpacity>
+			
+			<TouchableOpacity
+				style = {this.state.isAdministrator? styles.row : styles.rowHidden}
+				onPress={()=> navigate('AddSensor')}
+			>
+				<Text style = {styles.menuOption}>Add Sensor</Text>
 			</TouchableOpacity>
 			
 			<TouchableOpacity
@@ -89,6 +103,7 @@ export default class SensorList extends Component {
 			>
 				<Text style={styles.buttonText}>LOGOUT</Text>
 			</TouchableOpacity>
+			
 		  </View>
 	   )
 	}

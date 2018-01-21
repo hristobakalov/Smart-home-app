@@ -40,12 +40,14 @@ var apiSensor = {
 			})
 		.then((response) => response.json());
 	},
-	add(sensor){
+	add(sensor, token, username){
 		return fetch(sensorsApiUrl, {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
 			},
 			body: JSON.stringify(sensor)})
 		.then((response) => response.json());

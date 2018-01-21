@@ -14,6 +14,7 @@ from 'react-native'
 import UserApi from '../../lib/apiUser';
 import {StackNavigator} from 'react-navigation'
 import { NavigationActions } from 'react-navigation'
+import Settings from '../../config/roles';
 
 const backAction = NavigationActions.back({
 		key: 'Sensors'
@@ -31,7 +32,8 @@ export default class UserList extends Component {
 			users: [],
 			shouldRefresh: false,
 			userData: {},
-			pressStatus: false
+			pressStatus: false,
+			isUserAdministrator: false
 		};
 		this.props.navigation.dispatch(backAction);
 	}
@@ -40,9 +42,19 @@ export default class UserList extends Component {
 	// }
 	
 	editUser = (user) => {
-		console.log("PRESED");
+		console.log("edit user");
 		
 		this.props.navigation.navigate('EditUser', {user: user});
+	}
+	deleteUser = (user) => {
+		console.log("Delete user");
+		var userData = this.state.userData;
+		UserApi.delete(user._id, userData.token, userData.user.Email);
+		//might want to delete this user from the users array
+		 this.setState({
+			users: this.state.users.filter((item) => item._id != user._id)
+		  });
+		this.forceUpdate();
 	}
 	componentWillMount(){
 		var test = this._loadInitialState().done();
@@ -54,6 +66,9 @@ export default class UserList extends Component {
 		   let value = await AsyncStorage.getItem('loginData');
 		   if (value != null){
 			  var loginData = JSON.parse(value);
+			  if(loginData.user.Role == Settings.Administrator){
+				this.setState({isUserAdministrator: true});
+			  }
 			  this.setState({userData: loginData});
 			  UserApi.getAll(loginData.token, loginData.user.Email).then((res) => {
 				this.setState({users: res})
@@ -102,6 +117,18 @@ export default class UserList extends Component {
 							style={styles.pensil}
 							source={require('../../images/pensil.png')}
 						/>
+						<TouchableOpacity
+							activeOpacity={0.4}
+							style = {this.state.isUserAdministrator && this.state.userData.user._id != item._id  ? styles.row : styles.hidden}
+							onPress={() => {this.deleteUser(item)}}
+							
+							underlayColor ='#3498db'
+						>
+							<Image
+								style={styles.trash}
+								source={require('../../images/trash-can.png')}
+							/>
+						</TouchableOpacity>
 					</TouchableOpacity>
 				}
 			/>
@@ -128,6 +155,12 @@ const styles = StyleSheet.create ({
 	   width:20,
 	   height:20
    },
+   trash:{
+	   marginLeft: 10,
+	   alignItems: 'flex-end',
+	   width:30,
+	   height:30
+   },
    text:{
 		paddingBottom : 5,
 		fontSize: 22
@@ -142,5 +175,8 @@ const styles = StyleSheet.create ({
 	   marginBottom: 10,
 	   borderBottomWidth: 2,
 	   borderColor: '#3498db'
+   },
+   hidden:{
+		display: 'none'
    }
 })
