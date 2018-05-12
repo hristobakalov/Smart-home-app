@@ -9,7 +9,7 @@ var SensorSchema = new Schema({
   IsEnabled: Boolean,
   Type: String,
   Ip: String,
-  WateringDays: String[],
+  WateringDays: [{type: String}],
   WateringTime: Date,
 });
 
