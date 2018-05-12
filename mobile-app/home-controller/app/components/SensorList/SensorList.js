@@ -8,7 +8,8 @@ import {
    AsyncStorage,
    Button,
    TouchableOpacity,
-   Image
+   Image,
+   TextInput,
 } 
 from 'react-native'
 
@@ -16,6 +17,8 @@ import SensorApi from '../../lib/apiSensor';
 import RelationApi from '../../lib/apiRelations';
 import {StackNavigator} from 'react-navigation';
 import Settings from '../../config/roles';
+import CheckboxGroup from 'react-native-checkbox-group';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 export default class SensorList extends Component {
 	
@@ -28,7 +31,10 @@ export default class SensorList extends Component {
 			sensors: [],
 			shouldRefresh: false,
 			userData: {},
-			isUserAdministrator: false
+			isUserAdministrator: false,
+			days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+			isDateTimePickerVisible: false,
+			sensorIdDateTime: ""
 		};
 	}
 	SwitchValue = (sensor) => {
@@ -115,8 +121,27 @@ export default class SensorList extends Component {
 			// });
 		
 	}
+	waterPlant(){
+		console.log("water plant");
+	}
+	saveSelectedDays(values, id){
+		console.log('Selecte Days: ', values);
+		console.log('id: ', id);
+	}
 	
-	
+	//_showDateTimePicker = (id) => this.setState({ isDateTimePickerVisible: true, sensorIdDateTime: id });
+	_showDateTimePicker(id){
+		this.setState({isDateTimePickerVisible: true});
+		this.setState({sensorIdDateTime: id});
+	}
+	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+	 
+	_handleDatePicked = (date) => {
+		console.log('A date has been picked: ', date);
+		console.log(this.state.sensorIdDateTime);
+		this._hideDateTimePicker();
+	};
+	isSelected
 	render() {
 	console.log('Loading view: ',this.state.isUserAdministrator);
 	   return (
@@ -126,14 +151,33 @@ export default class SensorList extends Component {
 				extraData ={this.state.shouldRefresh}
 				keyExtractor={(item) => item._id}
 				renderItem ={({item}) =>
+				<View>
 					<View style = {styles.row}>
-						<Text style={styles.text}>{item.Name}
-						</Text>
-						<Switch
-							onValueChange = {() => this.switchSensor(item)}
-							value = {item.IsEnabled}
-							style= {styles.switch}
+						<Image
+								style={item.Type == "plant" ? styles.icon : styles.hidden}
+								source={require('../../images/plant.png')}
 						/>
+						<Image
+								style={item.Type == "led" || item.Type == undefined ? styles.icon : styles.hidden}
+								source={require('../../images/light.png')}
+						/>
+						<Text style={item.Type == "plant" ? styles.plantText : styles.text}>{item.Name}
+						</Text>
+						{item.Type != "plant" &&
+							<Switch
+								onValueChange = {() => this.switchSensor(item)}
+								value = {item.IsEnabled}
+								style= {styles.switch}
+							/>
+						}
+						{item.Type == "plant" &&
+							<Button
+								onPress={this.waterPlant}
+								title="Water"
+								color="#18cc66"
+								accessibilityLabel="Water plant"
+							/>
+						}
 						<TouchableOpacity
 							activeOpacity={0.4}
 							style = {this.state.isUserAdministrator ? styles.trashIcon : styles.hidden}
@@ -146,10 +190,48 @@ export default class SensorList extends Component {
 								source={require('../../images/trash-can.png')}
 							/>
 						</TouchableOpacity>
+						
 					</View>
+					{item.Type == "plant" &&
+						<View style={{flex: 1, flexDirection: 'column',}}>
+							<CheckboxGroup
+								callback={(selected) => { this.saveSelectedDays(selected, 5) }}
+								iconColor={"#18cc66"}
+								iconSize={18}
+								checkedIcon="ios-checkbox-outline"
+								uncheckedIcon="ios-square-outline"
+								checkboxes={this.state.days.map((day, index) => {
+									var obj= {};
+									obj.label = day;
+									obj.value = index;
+									obj.selected = true;
+									return obj;
+								})}
+								labelStyle={styles.checkboxLabel}
+								rowStyle={styles.checkboxGroup}
+								rowDirection={"row"}
+							/>
+							
+							<TouchableOpacity onPress={() => {this._showDateTimePicker(item._id)}} style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+								<Image
+									style={styles.clockImage}
+									source={require('../../images/clock.png')}
+								/>
+								<Text style={styles.input}>00:00</Text>
+							</TouchableOpacity>
+						</View>
+						
+					}
+				</View>
 				}
 			/>
-			
+			<DateTimePicker
+			  isVisible={this.state.isDateTimePickerVisible}
+			  onConfirm={this._handleDatePicked}
+			  onCancel={this._hideDateTimePicker}
+			  mode="time"
+			/>
+							
 			<Button
 				onPress={this.navigateToUserScreen}
 				title="Go to user's list"
@@ -161,39 +243,80 @@ export default class SensorList extends Component {
 	}
 }
 const styles = StyleSheet.create ({
-   container: {
+    container: {
       flex: 1,
       alignItems: 'center',
       marginTop: 50,
 	  
-   },
-   row:{
+    },
+    row:{
 	   flexDirection: 'row',
 	   marginBottom: 20
-   },
-   switch:{
+    },
+    switch:{
 	   alignItems: 'flex-end'
-   },
-   button:{
+    },
+    button:{
 	   marginBottom: 20,
 	   color: "#3498db"
-   },
+    },
     hidden:{
 		display: 'none'
-   },
-   trashIcon: {
+    },
+    checkboxGroup:{
+	   marginLeft: 15,
+	   flexDirection: 'row'
+    },
+    checkboxLabel:{
+	   fontSize: 12,
+	   marginLeft: -15,
+	   marginRight: 10,
+	   marginTop:24,
+	   justifyContent: 'center',
+	   alignItems: 'center',
+	   color: 'black'
+    },
+    trashIcon: {
 	   marginLeft: 20,
 	   height: 30,
 	   width:30
-   },
-   trash:{
+    },
+    trash:{
 	   // marginLeft: 10,
 	   alignItems: 'flex-end',
 	   width:30,
 	   height:30
-   },
-   text: {
+    },
+    icon:{
+	   width:30,
+	   height: 30,
+	   marginRight: 15,
+    },
+    waterPlant:{
+	   backgroundColor: "#18cc66"
+    },
+    text: {
 	   fontSize: 22,
 	   minWidth: 130
-   }
+    },
+    plantText: {
+	   fontSize: 22,
+	   minWidth: 115
+    },
+	input: {
+		height: 40,
+		
+		marginBottom: 10,
+		paddingTop: 5,
+		color: '#000',
+		paddingHorizontal: 10,
+		width: 50,
+		flex: 1,
+		flexDirection: 'row',
+	},
+	clockImage:{
+	   alignItems: 'flex-end',
+	   width:40,
+	   height:40,
+	}
 })

@@ -39,7 +39,7 @@ export default class AddSensor extends Component {
 		var sensor = this.state.sensor;
 		console.log(sensor);
 		if(!sensor || sensor.Name == undefined || sensor.PinNumber == undefined || 
-		sensor.IsOutput == undefined)
+		sensor.Type == undefined)
 		{
 			this.state.allFieldsHaveValue = false;
 			this.forceUpdate();
@@ -124,8 +124,7 @@ export default class AddSensor extends Component {
 		// re-render
 		this.forceUpdate();
 	}
-	updateIsOutput(value){
-		console.log(value);
+	updateType(value){
 		if(value === null || value === 0){
 			return;
 		}
@@ -138,13 +137,19 @@ export default class AddSensor extends Component {
 		}
 		
 		const sensor = this.state.sensor;
-		sensor.IsOutput = value;
+		sensor.Type = value;
 		// re-render
 		this.setState({selectedValue: value});
 		this.forceUpdate();
 	}
 	setPlantIP(value){
-		console.log(value);
+		if(value === null || value === 0){
+			return;
+		}
+		const sensor = this.state.sensor;
+		sensor.Ip = value;
+		// re-render
+		this.forceUpdate();
 	}
 	
 	render() {
@@ -176,7 +181,7 @@ export default class AddSensor extends Component {
 					style={styles.input}
 					mode="dropdown"
 					selectedValue = {this.state.selectedValue}
-					onValueChange={(value) => this.updateIsOutput(value)}>
+					onValueChange={(value) => this.updateType(value)}>
 					<Picker.Item label={"Select sensor type"} value={0} key={0} style={styles.picker}/>
 					<Picker.Item label={"LED"} value={"led"} key={1} style={styles.picker}/>
 					<Picker.Item label={"Plant"} value={"plant"} key={2} style={styles.picker}/>
