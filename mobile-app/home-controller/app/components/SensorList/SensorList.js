@@ -34,7 +34,8 @@ export default class SensorList extends Component {
 			isUserAdministrator: false,
 			days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 			isDateTimePickerVisible: false,
-			sensorIdDateTime: ""
+			sensorIdDateTime: "",
+			dateTime: new Date(),
 		};
 	}
 	SwitchValue = (sensor) => {
@@ -121,27 +122,48 @@ export default class SensorList extends Component {
 			// });
 		
 	}
-	waterPlant(){
+	waterPlant(sensor){
 		console.log("water plant");
+		
+		try{
+			SensorApi.waterPlant(sensor, this.state.userData.token, this.state.userData.user.Email).then((res) => {
+				console.log(res);
+			});
+		}
+		catch(err){
+			console.log(err);
+		}
 	}
-	saveSelectedDays(values, id){
+	saveSelectedDays(values, sensor){
 		console.log('Selecte Days: ', values);
-		console.log('id: ', id);
+		console.log('id: ', sensor);
+		sensor.WateringDays = values;
+		SensorApi.update(sensor._id, sensor, this.state.userData.token, this.state.userData.user.Email);
 	}
 	
 	//_showDateTimePicker = (id) => this.setState({ isDateTimePickerVisible: true, sensorIdDateTime: id });
-	_showDateTimePicker(id){
+	_showDateTimePicker(sensor){
 		this.setState({isDateTimePickerVisible: true});
-		this.setState({sensorIdDateTime: id});
+		this.setState({sensorIdDateTime: sensor});
 	}
 	_hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
 	 
 	_handleDatePicked = (date) => {
 		console.log('A date has been picked: ', date);
 		console.log(this.state.sensorIdDateTime);
+		var sensor = this.state.sensorIdDateTime;
+		sensor.WateringTime = date;
+		SensorApi.update(sensor._id, sensor, this.state.userData.token, this.state.userData.user.Email);
+		this.setState({dateTime: date});
+		
 		this._hideDateTimePicker();
+		this.forceUpdate();
 	};
-	isSelected
+	isSelected(item,index){
+		var result = false;
+		var result = item.WateringDays.find( day => day == index );
+		return result;
+	}
 	render() {
 	console.log('Loading view: ',this.state.isUserAdministrator);
 	   return (
@@ -172,7 +194,7 @@ export default class SensorList extends Component {
 						}
 						{item.Type == "plant" &&
 							<Button
-								onPress={this.waterPlant}
+								onPress={() => {this.waterPlant(item)}}
 								title="Water"
 								color="#18cc66"
 								accessibilityLabel="Water plant"
@@ -195,7 +217,7 @@ export default class SensorList extends Component {
 					{item.Type == "plant" &&
 						<View style={{flex: 1, flexDirection: 'column',}}>
 							<CheckboxGroup
-								callback={(selected) => { this.saveSelectedDays(selected, 5) }}
+								callback={(selected) => { this.saveSelectedDays(selected, item) }}
 								iconColor={"#18cc66"}
 								iconSize={18}
 								checkedIcon="ios-checkbox-outline"
@@ -204,7 +226,7 @@ export default class SensorList extends Component {
 									var obj= {};
 									obj.label = day;
 									obj.value = index;
-									obj.selected = true;
+									obj.selected = this.isSelected(item,index);
 									return obj;
 								})}
 								labelStyle={styles.checkboxLabel}
@@ -212,15 +234,16 @@ export default class SensorList extends Component {
 								rowDirection={"row"}
 							/>
 							
-							<TouchableOpacity onPress={() => {this._showDateTimePicker(item._id)}} style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
+							<TouchableOpacity onPress={() => {this._showDateTimePicker(item)}} style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
 								<Image
 									style={styles.clockImage}
 									source={require('../../images/clock.png')}
 								/>
-								<Text style={styles.input}>00:00</Text>
+								
+								<Text style={styles.input}>{this.state.dateTime.getHours() < 10 ? "0" + this.state.dateTime.getHours() : this.state.dateTime.getHours()}:
+								{this.state.dateTime.getMinutes() < 10 ? "0" + this.state.dateTime.getMinutes(): this.state.dateTime.getMinutes()}</Text>
 							</TouchableOpacity>
 						</View>
-						
 					}
 				</View>
 				}

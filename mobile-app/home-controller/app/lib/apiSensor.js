@@ -84,6 +84,26 @@ var apiSensor = {
 		// .catch(function(err) {console.log(err)});
 		
 	},
+	waterPlant(sensor , token, username){
+	console.log(sensor);
+		return fetch(sensorsApiUrl + 'waterPlant', {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
+			},
+			body: JSON.stringify(sensor)}) 
+		//.then((response) => response.json())
+		.then((response) => response.json());
+		// .then((responseData) => {console.log(responseData)})
+		// .catch(function(err) {console.log(err)});
+		// .then((response) => response.text())
+		// .then((responseData) => {console.log(responseData)})
+		// .catch(function(err) {console.log(err)});
+		
+	},
 	delete(id, token, username){
 		return fetch(sensorsApiUrl + id, {
 			method: "DELETE",
