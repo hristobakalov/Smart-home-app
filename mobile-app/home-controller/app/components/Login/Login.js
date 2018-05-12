@@ -138,19 +138,6 @@ export default class Login extends Component {
 							onSubmitEditing={() => this.focusNextField('2')}
 							onChangeText={ (value) => this.updateIP(value)}
 						/>
-						<TextInput
-							ref="2"
-							style={styles.input}
-							placeholder= "Alternative IP/Domain"
-							value={Settings.baseWebUrl}
-							placeholderTextColor="rgba(255,255,255,0.7)"
-							returnKeyType="next"
-							autoCapitalize="none"
-							autoCorrect={false}
-							underlineColorAndroid = 'transparent'
-							onSubmitEditing={() => this.focusNextField('3')}
-							onChangeText={ (value) => this.updateAlternativeIP(value)}
-						/>
 					</View>
 					<TextInput
 						ref="3"

@@ -27,10 +27,9 @@ export default class AddSensor extends Component {
 		this.state = {
 			sensor: {},
 			userData: {},
-			isOutputArr: ['LED','Water Pump'],
+			isOutputArr: ['True','False'],
 			allFieldsHaveValue: true,
-			selectedValue: "",
-			isPlantSelected: false,
+			selectedValue: ""
 		};
 	}
 	
@@ -46,10 +45,9 @@ export default class AddSensor extends Component {
 			return;
 		}
 		console.log(sensor);
+		var userData = this.state.userData;
 		sensor.IsEnabled = false;
 		sensor.PinNameNumber = sensor.PinNumber;
-		var userData = this.state.userData;
-		
 		SensorApi.add(sensor, userData.token, userData.user.Email)
 		.then((res, err) => {
 			if(err || res.status == 401){
@@ -130,21 +128,11 @@ export default class AddSensor extends Component {
 			return;
 		}
 		console.log(value);
-		if(value == "plant"){
-			this.state.isPlantSelected = true;
-		}
-		else{
-			this.state.isPlantSelected = false;
-		}
-		
 		const sensor = this.state.sensor;
 		sensor.IsOutput = value;
 		// re-render
 		this.setState({selectedValue: value});
 		this.forceUpdate();
-	}
-	setPlantIP(value){
-		console.log(value);
 	}
 	
 	render() {
@@ -177,19 +165,10 @@ export default class AddSensor extends Component {
 					mode="dropdown"
 					selectedValue = {this.state.selectedValue}
 					onValueChange={(value) => this.updateIsOutput(value)}>
-					<Picker.Item label={"Select sensor type"} value={0} key={0} style={styles.picker}/>
-					<Picker.Item label={"LED"} value={"led"} key={1} style={styles.picker}/>
-					<Picker.Item label={"Plant"} value={"plant"} key={2} style={styles.picker}/>
+					<Picker.Item label={"Select if sensor is output or input"} value={0} key={0} style={styles.picker}/>
+					<Picker.Item label={"Output"} value={true} key={1} style={styles.picker}/>
+					<Picker.Item label={"Input"} value={false} key={2} style={styles.picker}/>
                 </Picker>
-				<TextInput
-					ref="3"
-					style={this.state.isPlantSelected ? styles.input : styles.errorTextHidden}
-					placeholder= "Plant IP"
-					underlineColorAndroid = 'transparent'
-					placeholderTextColor="rgba(0,0,0,0.7)"
-					returnKeyType="next"
-					onChangeText={ (value) => this.setPlantIP(value)}
-				/>
 				<Text style= {this.state.allFieldsHaveValue ? styles.errorTextHidden : styles.errorText}>All fields should be filled!</Text>
 				<TouchableOpacity
 					style={styles.buttonContainer}

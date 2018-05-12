@@ -6,8 +6,9 @@ var SensorSchema = new Schema({
   PinNameNumber: Number,
   PinNumber: Number,
   IsOutput: Boolean,
-  IsEnabled: Boolean
-  
+  IsEnabled: Boolean,
+  Type: String,
+  Ip: String
 });
 
 mongoose.model('Sensor', SensorSchema);
