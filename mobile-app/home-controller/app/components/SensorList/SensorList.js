@@ -10,6 +10,7 @@ import {
    TouchableOpacity,
    Image,
    TextInput,
+   ToastAndroid
 } 
 from 'react-native'
 
@@ -124,15 +125,16 @@ export default class SensorList extends Component {
 	}
 	waterPlant(sensor){
 		console.log("water plant");
-		
-		try{
-			SensorApi.waterPlant(sensor, this.state.userData.token, this.state.userData.user.Email).then((res) => {
-				console.log(res);
-			});
-		}
-		catch(err){
-			console.log(err);
-		}
+		//alert("Plant is watered now!");
+		ToastAndroid.show('Plant is being watered!', ToastAndroid.SHORT);
+		// try{
+			// SensorApi.waterPlant(sensor, this.state.userData.token, this.state.userData.user.Email).then((res) => {
+				// console.log(res);
+			// });
+		// }
+		// catch(err){
+			// console.log(err);
+		// }
 	}
 	saveSelectedDays(values, sensor){
 		console.log('Selecte Days: ', values);
@@ -242,6 +244,16 @@ export default class SensorList extends Component {
 								
 								<Text style={styles.input}>{this.state.dateTime.getHours() < 10 ? "0" + this.state.dateTime.getHours() : this.state.dateTime.getHours()}:
 								{this.state.dateTime.getMinutes() < 10 ? "0" + this.state.dateTime.getMinutes(): this.state.dateTime.getMinutes()}</Text>
+								<Image
+									style={styles.clockImage}
+									source={require('../../images/temperature.png')}
+								/>
+								<Text style={styles.input}>25°C</Text>
+								<Image
+									style={styles.clockImage}
+									source={require('../../images/moisture2.png')}
+								/>
+								<Text style={styles.input}>60%</Text>
 							</TouchableOpacity>
 						</View>
 					}

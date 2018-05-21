@@ -29,6 +29,9 @@ export default class SensorList extends Component {
 		console.log('I am loading the drawer!');
 		var init = this._loadInitialState().done(() => {
 			var loginData = this.state.userData;
+			if(loginData == null || loginData == {} || loginData.user == undefined){
+				return;
+			}
 			console.log('IsLoggedIn user an Administrator:' ,  loginData.user.Role == Settings.Administrator);
 				  
 			this.setState({isAdministrator: loginData.user.Role == Settings.Administrator});

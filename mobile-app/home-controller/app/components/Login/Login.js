@@ -190,8 +190,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center'
 	},
 	logo: {
-		width: 100,
-		height: 120
+		width: 150,
+		height: 140
 	},
 	title:{
 		color: '#FFF',
