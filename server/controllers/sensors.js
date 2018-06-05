@@ -61,7 +61,8 @@ exports.GetTemperature = function(req, res){
 		if(result.Type == "plant" ){
 			 var pin = result.PinNameNumber;
 			 var ip = result.Ip;
-			 arduino.getTemperature(ip,pin, function(err, data){
+			 arduino.getTemperature(ip,pin, function(data){
+				 console.log(data);
 				 return res.send(data);
 			 });
 			 
@@ -80,7 +81,8 @@ exports.GetSoilMoisture = function(req, res){
 		if(result.Type == "plant" ){
 			 var pin = result.PinNameNumber;
 			 var ip = result.Ip;
-			 arduino.getSoilMoisture(ip,pin, function(err, data){
+			 arduino.getSoilMoisture(ip,pin, function(data){
+				 console.log(data);
 				 return res.send(data);
 			 });
 			 
