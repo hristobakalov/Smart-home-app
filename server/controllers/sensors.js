@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var constants = require('../constants');
 var helpers = require('../utils');
+var arduino = require('../utils/arduino');
 var connection = mongoose.createConnection(constants.DBUrl);
 
 Sensor = connection.model('Sensor');
@@ -49,6 +50,23 @@ exports.delete = function(req, res){
   var id = req.params.id;
   Sensor.remove({'_id':id},function(result) {
     return res.send(result);
+  });
+};
+exports.GetTemperature = function(req, res){
+	var id = req.params.id;
+	
+	Sensor.findOne({'_id':id},function(err, result) {
+		//console.log(result);
+		if(result == null) {return res.send(400);}
+		if(result.Type == "plant" ){
+			 var pin = result.PinNameNumber;
+			 var ip = result.Ip;
+			 arduino.getTemperature(ip,pin);
+			 return res.send(200);
+		 }
+		 else{
+			  return res.send(400);
+		 }
   });
 };
 exports.SwitchSensor = function(req, res){

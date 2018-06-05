@@ -6,3 +6,6 @@ function define(name, value) {
 }
 
 define("DBUrl", 'mongodb://localhost/db');
+define("ArduinoGetTemperatureRoute", '/getTemperature');
+define("ArduinoGetSoilMoistureRoute", '/getSoilMoisture');
+define("ArduinoWaterPlantRoute", '/waterPlant?duration=');
