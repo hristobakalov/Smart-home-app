@@ -1,5 +1,5 @@
 var constants = require('../constants');
-const https = require('https');
+const http = require('http');
 module.exports={
 	getTemperature: function (ip, pin) {
 		console.log("Getting temperature: ", ip);
@@ -7,7 +7,7 @@ module.exports={
 			ip = '192.168.0.199';
 		//}
 		var url = 'http://' + ip + constants.ArduinoGetTemperatureRoute;
-		https.get(url, (resp) => {
+		http.get(url, (resp) => {
 		  var data = '';
 		 
 		  // A chunk of data has been recieved.
@@ -30,7 +30,7 @@ function getTemperature (ip, pin) {
 	// if(!ip){
 		ip = '192.168.0.199';
 	//}
-    https.get(ip + constants.ArduinoGetTemperatureRoute, (resp) => {
+    http.get(ip + constants.ArduinoGetTemperatureRoute, (resp) => {
 	  var data = '';
 	 
 	  // A chunk of data has been recieved.
