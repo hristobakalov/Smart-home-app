@@ -6,7 +6,8 @@ module.exports={
 		// if(!ip){
 			ip = '192.168.0.199';
 		//}
-		https.get(ip + constants.ArduinoGetTemperatureRoute, (resp) => {
+		var url = 'http://' + ip + constants.ArduinoGetTemperatureRoute;
+		https.get(url, (resp) => {
 		  var data = '';
 		 
 		  // A chunk of data has been recieved.
