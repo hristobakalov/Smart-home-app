@@ -61,8 +61,29 @@ exports.GetTemperature = function(req, res){
 		if(result.Type == "plant" ){
 			 var pin = result.PinNameNumber;
 			 var ip = result.Ip;
-			 var data = arduino.getTemperature(ip,pin);
-			 return res.send(data);
+			 arduino.getTemperature(ip,pin, function(err, data){
+				 return res.send(data);
+			 });
+			 
+		 }
+		 else{
+			  return res.sendStatus(400);
+		 }
+  });
+};
+exports.GetSoilMoisture = function(req, res){
+	var id = req.params.id;
+	
+	Sensor.findOne({'_id':id},function(err, result) {
+		//console.log(result);
+		if(result == null) {return res.sendStatus(400);}
+		if(result.Type == "plant" ){
+			 var pin = result.PinNameNumber;
+			 var ip = result.Ip;
+			 arduino.getSoilMoisture(ip,pin, function(err, data){
+				 return res.send(data);
+			 });
+			 
 		 }
 		 else{
 			  return res.sendStatus(400);
