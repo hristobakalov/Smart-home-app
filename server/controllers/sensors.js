@@ -57,15 +57,15 @@ exports.GetTemperature = function(req, res){
 	
 	Sensor.findOne({'_id':id},function(err, result) {
 		//console.log(result);
-		if(result == null) {return res.send(400);}
+		if(result == null) {return res.sendStatus(400);}
 		if(result.Type == "plant" ){
 			 var pin = result.PinNameNumber;
 			 var ip = result.Ip;
-			 arduino.getTemperature(ip,pin);
-			 return res.send(200);
+			 var data = arduino.getTemperature(ip,pin);
+			 return res.send(data);
 		 }
 		 else{
-			  return res.send(400);
+			  return res.sendStatus(400);
 		 }
   });
 };
