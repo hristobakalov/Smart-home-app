@@ -5,7 +5,6 @@
 #include <SPI.h>
 
 dht DHT;
-
 #define DHT11_PIN 6
 int val = 0; //value for storing moisture value
 int soilPin = A0;//Declare a variable for the soil moisture sensor
@@ -14,8 +13,8 @@ int waterPumpPin = 8;//Variable for Water pump pin
 
 EthernetServer server(80);
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-byte ip[] = { 192, 168, 1, 199 }; //Manual setup only
-byte gateway[] = { 192, 168, 1, 1 }; //Manual setup only
+byte ip[] = { 192, 168, 0, 199 }; //{ 192, 168, 1, 199 }; //Manual setup only
+byte gateway[] = { 10,4,35,1}; //{ 192, 168, 1, 1 }; //Manual setup only
 byte subnet[] = { 255, 255, 255, 0 }; //Manual setup only
 
 boolean reading = false;
@@ -46,69 +45,105 @@ void setup() {
 
 void loop() {
   int chk = DHT.read11(DHT11_PIN);
-
+  float temperature = DHT.temperature;
+  float humidity = DHT.humidity;
+ 
   // Wait for an incomming connection
   EthernetClient client = server.available();
+   if (client) {
+      bool turnWaterPump = false;
+      int seconds = 10; //default amount of time the pump will be turned on
+      Serial.println("new client");
+      String requestRoute = "";
+      boolean currentLineIsBlank = true;
+      while (client.connected()) {
+        if (client.available()) {
+          
+          char c = client.read();
+          Serial.write(c);
+          requestRoute += c;
+        
+          if (c == '\n' && currentLineIsBlank) {
+            client.println("HTTP/1.1 200 OK");
+            client.println("Content-Type: application/json;charset=utf-8");
+            client.println("Server: Arduino");
+            client.println("Connnection: close");
+            client.println();
 
-  // Do we have a client?
-  if (!client) return;
-  Serial.println(F("New client"));
-
-  // Read the request (we ignore the content in this example)
-  while (client.available()){
-    client.read();
-  }
-  if(reading && c == ‘ ‘) reading = false;
-  if(c == ‘?’) reading = true; //found the ?, begin reading the info
-  // Allocate JsonBuffer
-  // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonBuffer<500> jsonBuffer;
-
-  // Create the root object
-  JsonObject& root = jsonBuffer.createObject();
-
-  // Create the "analog" array
-  JsonArray& analogValues = root.createNestedArray("analog");
-  for (int pin = 0; pin < 6; pin++) {
-    // Read the analog input
-    int value = analogRead(pin);
-
-    // Add the value at the end of the array
-    analogValues.add(value);
-  }
-
-  // Create the "digital" array
-  JsonArray& digitalValues = root.createNestedArray("digital");
-  for (int pin = 0; pin < 14; pin++) {
-    // Read the digital input
-    int value = digitalRead(pin);
-
-    // Add the value at the end of the array
-    digitalValues.add(value);
-  }
-
-  Serial.print(F("Sending: "));
-  root.printTo(Serial);
-  Serial.println();
-
-  // Write response headers
-  client.println("HTTP/1.0 200 OK");
-  client.println("Content-Type: application/json");
-  client.println("Connection: close");
-  client.println();
-
-  // Write JSON document
-  root.prettyPrintTo(client);
-
-  // Disconnect
-  client.stop();
+            //API routes for GET requests - great engineering here!
+            if(requestRoute.indexOf("/getTemperature") > 0){
+              Serial.print("This is getTemperature: Temp- ");
+              Serial.print(temperature);
+              Serial.print(" Humidity- ");
+              Serial.print(humidity);
+              Serial.println();
+                client.print("{\"Temperature\":\"");
+                client.print(temperature);
+                client.print("\",\"Humidity\":\"");
+                client.print(humidity);
+                client.print("\"}");
+            }
+            else if(requestRoute.indexOf("/waterPlant") > 0){
+              Serial.println("This is waterPlant");
+              String expectedAttribute = "duration=";
+              int indexOfDuration = requestRoute.indexOf(expectedAttribute);
+              String valueStr = "";
+              if(indexOfDuration > 0){
+                indexOfDuration += expectedAttribute.length();
+                while(requestRoute[indexOfDuration] != ' '){
+                  valueStr += requestRoute[indexOfDuration];
+                  indexOfDuration++;
+                }
+                seconds = valueStr.toInt();
+               
+              }
+               Serial.print("Duration: ");
+               Serial.print(seconds);
+               Serial.println();
+               turnWaterPump = true;
+              
+                client.print("{\"Duration\":\"");
+                client.print(seconds);
+                client.print("\"}");
+            }
+            else if(requestRoute.indexOf("/getSoilMoisture") > 0){
+              Serial.println("This is soilMoisture - ");
+              
+              int soilMoisture = readSoil();
+              Serial.print(soilMoisture);
+              
+              client.print("{\"Moisture\":\"");
+              client.print(soilMoisture);
+              client.print("\"}");
+            }
+            else{
+              Serial.print("Error received: ");
+              Serial.println(requestRoute);
+              client.print("{\"error\":\"kur\"}");
+              
+            }
+ 
+           
+            client.println();
+            break;
+          }
+  
+        }
+      }
+      delay(1);
+      client.stop();
+      Serial.println("client disconnected");
+      if(turnWaterPump){
+         waterPlant(seconds);
+      }
+    }
 
  // getTemperature();
 //  getHumidity();
  // readSoil();
   //Serial.println(readSoil());
  // waterPlant();
- // delay(1000);
+  delay(1000);
 }
 
 int readSoil()
@@ -123,23 +158,26 @@ int readSoil()
   Serial.println(val);
   return val;//send current moisture value
 }
-double getTemperature()
+float getTemperature()
 {
+  int chk = DHT.read11(DHT11_PIN);
   Serial.print("Temperature = ");
   Serial.println(DHT.temperature);
   return DHT.temperature;
 }
-double getHumidity()
+float getHumidity()
 {
+  int chk = DHT.read11(DHT11_PIN);
   Serial.print("Humidity = ");
   Serial.println(DHT.humidity);
   return DHT.humidity;
 }
-void waterPlant()
+void waterPlant(int seconds)
 {
+  int miliseconds = seconds * 1000;
   Serial.println("Turning water pump on: ");
   digitalWrite(waterPumpPin, HIGH);//turn D8 "On"
-  delay(10000);//wait 10 milliseconds
+  delay(miliseconds);//wait 10 milliseconds
   digitalWrite(waterPumpPin, LOW);//turn D8 "Off"
   Serial.println("Turning water pump off ");
 }
