@@ -24,7 +24,7 @@ module.exports={
 		}).on("error", (err) => {
 		  console.log("Error: " + err.message);
 		});
-	}
+	},
 	
 	getSoilMoisture: function (ip, pin) {
 		console.log("Getting SoilMoisture: ", ip);
@@ -50,5 +50,5 @@ module.exports={
 		  console.log("Error: " + err.message);
 		  return err;
 		});
-	}
+	},
 }
