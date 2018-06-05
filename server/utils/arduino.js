@@ -1,7 +1,7 @@
 var constants = require('../constants');
 const http = require('http');
 module.exports={
-	getTemperature: function (ip, pin) {
+	getTemperature: function (ip, pin, callback) {
 		console.log("Getting temperature: ", ip);
 		// if(!ip){
 			ip = '192.168.0.199';
@@ -18,7 +18,7 @@ module.exports={
 		  // The whole response has been received. Print out the result.
 		  resp.on('end', () => {
 			console.log(JSON.parse(data));
-			return data;
+			cllback(data);
 		  });
 		 
 		}).on("error", (err) => {
@@ -26,7 +26,7 @@ module.exports={
 		});
 	},
 	
-	getSoilMoisture: function (ip, pin) {
+	getSoilMoisture: function (ip, pin, callback) {
 		console.log("Getting SoilMoisture: ", ip);
 		// if(!ip){
 			ip = '192.168.0.199';
@@ -43,7 +43,7 @@ module.exports={
 		  // The whole response has been received. Print out the result.
 		  resp.on('end', () => {
 			console.log(JSON.parse(data));
-			return data;
+			callback(data);
 		  });
 		 
 		}).on("error", (err) => {
