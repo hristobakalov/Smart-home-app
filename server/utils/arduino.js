@@ -1,9 +1,6 @@
 var constants = require('../constants');
 const https = require('https');
 module.exports={
-	var constants = require('../constants');
-	const https = require('https');
-	
 	getTemperature: function (ip, pin) {
 		console.log("Getting temperature: ", ip);
 		// if(!ip){
