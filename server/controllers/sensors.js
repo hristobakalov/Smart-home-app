@@ -108,7 +108,7 @@ exports.WaterPlant = function(req, res){
 		if(result.Type == "plant" ){
 			 var pin = result.PinNameNumber;
 			 var ip = result.Ip;
-			 arduino.getSoilMoisture(ip,pin, duration, function(data, err){
+			 arduino.waterPlant(ip,pin, duration, function(data, err){
 				  if(err){
 					 return res.sendStatus(500);
 				 }
