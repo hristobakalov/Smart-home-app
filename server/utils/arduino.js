@@ -22,6 +22,7 @@ module.exports={
 		  });
 		 
 		}).on("error", (err) => {
+			callback(null,err);
 		  console.log("Error: " + err.message);
 		});
 	},
@@ -48,7 +49,7 @@ module.exports={
 		 
 		}).on("error", (err) => {
 		  console.log("Error: " + err.message);
-		  callback(err);
+		  callback(null,err);
 		});
 	},
 }
