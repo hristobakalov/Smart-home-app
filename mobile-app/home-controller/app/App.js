@@ -6,7 +6,8 @@ import {
 	Button,
 	Switch,
 	FlatList,
-	AsyncStorage
+	AsyncStorage,
+	ToastAndroid
 	} from 'react-native';
 import SensorSwitch from './components/SensorSwitch/SensorSwitch'
 import SensorList from './components/SensorList/SensorList'
@@ -17,6 +18,7 @@ import AddSensor from './components/AddSensor/AddSensor'
 import EditSensors from './components/EditSensors/EditSensors'
 import DrawerView from './components/Drawer/Drawer'
 import UserApi from './lib/apiUser';
+import Icon from 'react-native-vector-icons/Foundation';
 
 import Login from './components/Login/Login'
 
@@ -36,6 +38,7 @@ const Drawer = DrawerNavigator({
 },
 {
 	contentComponent: props => <DrawerView{...props}/>
+	
 });
 
 const Navigation = StackNavigator({
@@ -46,13 +49,21 @@ const Navigation = StackNavigator({
 	AddUser: {screen: AddUser},
 	AddSensor: {screen: AddSensor},
 	},{
-		navigationOptions: {
+		navigationOptions: ({ navigation }) => ({
+      headerLeft: <Icon name="list" size={35} style={{marginLeft: 10}} onPress={ () => ToastAndroid.show('Slide to the right to expand menu', ToastAndroid.SHORT)} />
+	  ,headerStyle: {
+				backgroundColor: '#3498db',
+				marginTop: Expo.Constants.statusBarHeight
+			}
+    })
+	
+		/* navigationOptions: {
 			// header: false,
 			headerStyle: {
 				backgroundColor: '#3498db',
 				marginTop: Expo.Constants.statusBarHeight
 			}
-		}
+		} */
 });
 
 export default class App extends React.Component {
@@ -65,7 +76,9 @@ export default class App extends React.Component {
 			shouldRefresh: false
 		};
 	}
-	
+	 toggleDrawer = () => {
+    this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+	}
 	switchSensor = (sensor) => {
 		
 		this.setState({shouldRefresh: !this.state.shouldRefresh});

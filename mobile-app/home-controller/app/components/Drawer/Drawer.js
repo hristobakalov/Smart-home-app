@@ -14,7 +14,7 @@ import Settings from '../../config/roles';
 import SensorApi from '../../lib/apiSensor';
 import {StackNavigator} from 'react-navigation';
 
-export default class SensorList extends Component {
+export default class Drawer extends Component {
 	static navigationOptions= {
 		title: 'Menu',
 	};

@@ -85,24 +85,47 @@ var apiSensor = {
 		
 	},
 	waterPlant(sensor , token, username){
-	console.log(sensor);
-		return fetch(sensorsApiUrl + 'waterPlant', {
-			method: "POST",
+	console.log("Water plant API called");
+		return fetch(sensorsApiUrl + 'waterPlant/5/' + sensor._id, {
+			method: "GET",
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 				'x-access-token': token,
 				'x-key': username
 			},
-			body: JSON.stringify(sensor)}) 
+			}) 
 		//.then((response) => response.json())
 		.then((response) => response.json());
-		// .then((responseData) => {console.log(responseData)})
-		// .catch(function(err) {console.log(err)});
-		// .then((response) => response.text())
-		// .then((responseData) => {console.log(responseData)})
-		// .catch(function(err) {console.log(err)});
 		
+	},
+	getTemperature(id , token, username){
+	console.log("Get Sensor Temperature called");
+		return fetch(sensorsApiUrl + 'getTemperature/' + id, {
+			method: "GET",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
+			},
+			}) 
+		//.then((response) => response.json())
+		.then((response) => response.json());
+	},
+	getSoilMoisture(id , token, username){
+	console.log("Get Sensor Soil Moisture called");
+		return fetch(sensorsApiUrl + 'getSoilMoisture/' + id, {
+			method: "GET",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'x-access-token': token,
+				'x-key': username
+			},
+			}) 
+		//.then((response) => response.json())
+		.then((response) => response.json());
 	},
 	delete(id, token, username){
 		return fetch(sensorsApiUrl + id, {

@@ -9,8 +9,10 @@ import {
    Button,
    TouchableOpacity,
    Image,
+   ToastAndroid,
+   RefreshControl,
    TextInput,
-   ToastAndroid
+   KeyboardAvoidingView,
 } 
 from 'react-native'
 
@@ -37,6 +39,11 @@ export default class SensorList extends Component {
 			isDateTimePickerVisible: false,
 			sensorIdDateTime: "",
 			dateTime: new Date(),
+			temperature: "",
+			soilMoisture: "",
+			humidity: "",
+			isDataLoaded: true,
+			isRefreshing: false
 		};
 	}
 	SwitchValue = (sensor) => {
@@ -116,26 +123,71 @@ export default class SensorList extends Component {
 		  console.log("something blew up");
 		}
 		
-		
+		this.getTemperature();
+		//this.getSoilMoisture();
 		 // let value = await AsyncStorage.getItem('loginData', (err, result)=>{
 			// console.log(result);
 			// console.log(err);
 			// });
 		
+		
 	}
-	waterPlant(sensor){
+	waterPlant = (sensor) => {
 		console.log("water plant");
+		var userData = this.state.userData;
 		//alert("Plant is watered now!");
 		ToastAndroid.show('Plant is being watered!', ToastAndroid.SHORT);
-		// try{
-			// SensorApi.waterPlant(sensor, this.state.userData.token, this.state.userData.user.Email).then((res) => {
-				// console.log(res);
-			// });
-		// }
-		// catch(err){
-			// console.log(err);
-		// }
+		try{
+			SensorApi.waterPlant(sensor, userData.token, userData.user.Email).then((res) => {
+				console.log(res);
+			});
+		}
+		catch(err){
+			console.log(err);
+		}
+		
+		
 	}
+	getTemperature = (sensorId) => {
+		this.setState({isDataLoaded: false});
+		console.log("get plant data");
+		var id = '';
+		if(!sensorId){ // move this to intial setup
+			id = '5b01970cdf675f03b068b828';
+		}
+		else{
+			var id = sensorId;
+		}
+		
+		var userData = this.state.userData;
+		//alert("Plant is watered now!");
+		ToastAndroid.show('Fetching plant data', ToastAndroid.SHORT);
+		try{
+			SensorApi.getTemperature(id, userData.token, userData.user.Email).then((res) => {
+				console.log(res);
+				this.setState({temperature: res.Temperature.substring(0,2)});
+				this.setState({humidity: res.Humidity.substring(0,2)});
+				SensorApi.getSoilMoisture(id, userData.token, userData.user.Email).then((res) => {
+					console.log(res);
+					var min = 150;
+					var max = 700;
+					var value = parseInt(res.Moisture);
+					if(value < 150) value = 150;
+					if(value > 700) value = 700;
+					var percentage = ((value - min) * 100) / (max - min);
+					var percentage = Math.round(percentage);
+					this.setState({soilMoisture: percentage});
+					this.setState({isDataLoaded: true});
+					this.setState({isRefreshing: false});
+					this.forceUpdate();
+				});
+			});
+		}
+		catch(err){
+			console.log(err);
+		}
+	}
+
 	saveSelectedDays(values, sensor){
 		console.log('Selecte Days: ', values);
 		console.log('id: ', sensor);
@@ -161,16 +213,58 @@ export default class SensorList extends Component {
 		this._hideDateTimePicker();
 		this.forceUpdate();
 	};
-	isSelected(item,index){
+	isSelected (item,index) {
 		var result = false;
 		var result = item.WateringDays.find( day => day == index );
 		return result;
 	}
+	updateDuration = (value, sensor) => {
+		if(!value || value < 0)
+		{
+			ToastAndroid.show('Duration vale is invalid', ToastAndroid.SHORT);
+			return;
+		}
+		console.log("Updating duration value to ", value);
+		sensor.Duration = parseInt(value);
+		SensorApi.update(sensor._id, sensor, this.state.userData.token, this.state.userData.user.Email);
+		this.forceUpdate();
+	}
+	_onRefresh() {
+		this.setState({isDataLoaded: false});
+		this.setState({isRefreshing: true});
+		this._loadInitialState();
+		this.getTemperature();
+		
+    }
+	_onLongPressButton = (button) => {
+		console.log(button);
+		if(button == "clock")ToastAndroid.show('Select the time of watering', ToastAndroid.SHORT);
+		else if(button == "temperature") ToastAndroid.show('Shows room temperature', ToastAndroid.SHORT);
+		else if(button == "humidity") ToastAndroid.show('Shows room humidity', ToastAndroid.SHORT);
+		else if(button == "soilMoisture") ToastAndroid.show('Shows plant soil moisture', ToastAndroid.SHORT);
+		else if(button == "duration") ToastAndroid.show('Set duraton in seconds for watering plant', ToastAndroid.SHORT);
+	}
 	render() {
-	console.log('Loading view: ',this.state.isUserAdministrator);
+		if(this.state.isDataLoaded === false){
+			return (
+				<View style = {styles.container}>
+					<Image
+						style= {{marginTop: 100, width:160, height:160}}
+						source={require('../../images/loading.gif')}
+					/>
+				</View>
+			)
+		}
 	   return (
-		  <View style = {styles.container}>
-			<FlatList 
+			<KeyboardAvoidingView behavior="padding" style={styles.container}>
+			
+			<FlatList
+				refreshControl={
+				  <RefreshControl
+					refreshing={this.state.isRefreshing}
+					onRefresh={this._onRefresh.bind(this)}
+				  />
+				}
 				data = {this.state.sensors}
 				extraData ={this.state.shouldRefresh}
 				keyExtractor={(item) => item._id}
@@ -235,30 +329,76 @@ export default class SensorList extends Component {
 								rowStyle={styles.checkboxGroup}
 								rowDirection={"row"}
 							/>
+							<View style={{flex: 1, flexDirection: 'row',}}>
 							
-							<TouchableOpacity onPress={() => {this._showDateTimePicker(item)}} style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
-								<Image
-									style={styles.clockImage}
-									source={require('../../images/clock.png')}
-								/>
-								
-								<Text style={styles.input}>{this.state.dateTime.getHours() < 10 ? "0" + this.state.dateTime.getHours() : this.state.dateTime.getHours()}:
-								{this.state.dateTime.getMinutes() < 10 ? "0" + this.state.dateTime.getMinutes(): this.state.dateTime.getMinutes()}</Text>
+								<TouchableOpacity onPress={() => {this._showDateTimePicker(item)}} style={{flex: 1, flexDirection: 'row', marginTop: 10}}
+									onLongPress={() => {this._onLongPressButton("clock")}}>
+									<Image
+										style={styles.clockImage}
+										source={require('../../images/clock.png')}
+									/>
+									
+									<Text style={styles.input}>{this.state.dateTime.getHours() < 10 ? "0" + this.state.dateTime.getHours() : this.state.dateTime.getHours()}:
+									{this.state.dateTime.getMinutes() < 10 ? "0" + this.state.dateTime.getMinutes(): this.state.dateTime.getMinutes()}</Text>
+									
+								</TouchableOpacity>
+								<TouchableOpacity
+									style = {styles.plantData}
+									onLongPress={() => {this._onLongPressButton("duration")}}>
+									<Text style = {{marginTop: 15}}>
+										Duration:
+									</Text>
+									<TextInput
+										ref="1"
+										style={styles.inputDuration}
+										placeholder= "Seconds"
+										value={item.duration}
+										placeholderTextColor="rgba(0,0,0,0.7)"
+										returnKeyType="next"
+										autoCorrect={false}
+										keyboardType='numeric'
+										
+										onChangeText={ (value) =>{ this.updateDuration(value, item)}}
+									/>
+								</TouchableOpacity>
+							</View>
+						</View>
+						
+					}
+					{item.Type == "plant" &&
+						<View style={{flex: 1, flexDirection: 'row',}}>
+							<TouchableOpacity
+								style = {styles.plantData}
+								onLongPress={() => {this._onLongPressButton("temperature")}}>
 								<Image
 									style={styles.clockImage}
 									source={require('../../images/temperature.png')}
 								/>
-								<Text style={styles.input}>25°C</Text>
+								<Text style={styles.input}>{this.state.temperature}°C</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style = {styles.plantData}
+								onLongPress={() => {this._onLongPressButton("humidity")}}>
 								<Image
 									style={styles.clockImage}
 									source={require('../../images/moisture2.png')}
 								/>
-								<Text style={styles.input}>60%</Text>
+								<Text style={styles.input}>{this.state.humidity}%</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style = {styles.plantData}
+								onLongPress={() => {this._onLongPressButton("soilMoisture")}}>
+								<Image
+									style={styles.clockImage}
+									source={require('../../images/plant-moisture.png')}
+								/>
+								<Text style={styles.input}>{this.state.soilMoisture}%</Text>
 							</TouchableOpacity>
 						</View>
-					}
+						}
 				</View>
 				}
+				
 			/>
 			<DateTimePicker
 			  isVisible={this.state.isDateTimePickerVisible}
@@ -273,7 +413,7 @@ export default class SensorList extends Component {
 				style = {styles.button}
 				accessibilityLabel="Go to User List View"
 			/>
-		  </View>
+		  </KeyboardAvoidingView>
 	   )
 	}
 }
@@ -349,9 +489,20 @@ const styles = StyleSheet.create ({
 		flex: 1,
 		flexDirection: 'row',
 	},
+	inputDuration:{
+		width: 150,
+		marginLeft: 10,
+		marginTop:-10
+	},
 	clockImage:{
 	   alignItems: 'flex-end',
 	   width:40,
 	   height:40,
-	}
+	},
+	plantData:{
+		width: 110,
+		marginRight:15,
+		flexDirection: 'row',
+		flex: 1
+	},
 })

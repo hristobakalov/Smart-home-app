@@ -102,6 +102,9 @@ exports.GetSoilMoisture = function(req, res){
 exports.WaterPlant = function(req, res){
 	var id = req.params.id;
 	var duration = req.params.duration;
+	if(!duration){
+		duration = 5;
+	}
 	Sensor.findOne({'_id':id},function(err, result) {
 		//console.log(result);
 		if(result == null) {return res.sendStatus(400);}
