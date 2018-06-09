@@ -84,7 +84,10 @@ exports.GetSoilMoisture = function(req, res){
 		if(result.Type == "plant" ){
 			 var pin = result.PinNameNumber;
 			 var ip = result.Ip;
-			 arduino.getSoilMoisture(ip,pin, function(data){
+			 arduino.getSoilMoisture(ip,pin, function(data, err){
+				  if(err){
+					 return res.sendStatus(500);
+				 }
 				 console.log(data);
 				 return res.send(data);
 			 });
@@ -95,6 +98,31 @@ exports.GetSoilMoisture = function(req, res){
 		 }
   });
 };
+
+exports.WaterPlant = function(req, res){
+	var id = req.params.id;
+	var duration = req.params.duration;
+	Sensor.findOne({'_id':id},function(err, result) {
+		//console.log(result);
+		if(result == null) {return res.sendStatus(400);}
+		if(result.Type == "plant" ){
+			 var pin = result.PinNameNumber;
+			 var ip = result.Ip;
+			 arduino.getSoilMoisture(ip,pin, duration, function(data, err){
+				  if(err){
+					 return res.sendStatus(500);
+				 }
+				 console.log(data);
+				 return res.send(data);
+			 });
+			 
+		 }
+		 else{
+			  return res.sendStatus(400);
+		 }
+  });
+};
+
 exports.SwitchSensor = function(req, res){
 	var name = req.body.name;
 	console.log(name);

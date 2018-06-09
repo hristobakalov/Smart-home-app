@@ -39,6 +39,7 @@
 	app.post('/api/sensors/switch', sensors.SwitchSensor);
 	app.get('/api/sensors/getTemperature/:id', sensors.GetTemperature);
 	app.get('/api/sensors/getSoilMoisture/:id', sensors.GetSoilMoisture);
+	app.get('/api/sensors/waterPlant/:duration/:id', sensors.WaterPlant);
 	
 	app.get('/api/userrolerelations', relations.findAllUserRoleRelations);
 	app.get('/api/relations/user/:id/role', relations.findRoleByUserId);
