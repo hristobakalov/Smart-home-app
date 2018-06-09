@@ -61,7 +61,10 @@ exports.GetTemperature = function(req, res){
 		if(result.Type == "plant" ){
 			 var pin = result.PinNameNumber;
 			 var ip = result.Ip;
-			 arduino.getTemperature(ip,pin, function(data){
+			 arduino.getTemperature(ip,pin, function(data,err){
+				 if(err){
+					 return res.sendStatus(500);
+				 }
 				 console.log(data);
 				 return res.send(data);
 			 });
