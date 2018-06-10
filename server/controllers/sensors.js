@@ -4,6 +4,7 @@ var helpers = require('../utils');
 var arduino = require('../utils/arduino');
 var connection = mongoose.createConnection(constants.DBUrl);
 var cron = require('cron');
+var CronJob = require('cron').CronJob;
 Sensor = connection.model('Sensor');
 var wateringSchedule = new Object();
 var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
@@ -24,7 +25,7 @@ var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
 		  // timeZone: 'Europe/Copenhagen'
 		// });
 		wateringSchedule = new CronJob(cronQuery, function() {
-		  console.log('Job WAS EXECUTRED');
+		  console.log('Job WAS EXECUTED');
 		  }, function () {
 			console.log('THE JOB STOPPED');
 		  },
