@@ -76,7 +76,7 @@ exports.update = function(req, res) {
 			var mins = date.getMinutes();
 			var days = updates.WateringDays.join(',');
 			var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
-			wateringSchedule.setTime(new CronTime(cronQuery));
+			wateringSchedule.setTime(new cron.CronTime(cronQuery));
 			console.log('job1 status', wateringSchedule.nextDates().join(' ;'));
 	  }
       console.log('Updated %d Sensor', numberAffected);
