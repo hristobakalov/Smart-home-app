@@ -372,7 +372,7 @@ export default class SensorList extends Component {
 										source={require('../../images/clock.png')}
 									/>
 									
-									<Text style={styles.input}>{new Date(item.WateringTime).toTimeString().split(' ')[0]}</Text>
+									<Text style={styles.input}>{new Date(item.WateringTime).toLocaleTimeString('en-US').split(' ')[0]}</Text>
 									
 								</TouchableOpacity>
 								<TouchableOpacity
