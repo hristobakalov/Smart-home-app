@@ -23,14 +23,14 @@ var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
 		});
 	}
   });
-var job1 = new cron.CronJob({
-  cronTime: '0 * * * * 0,1,2', //every min '0 * * * * *'
-  onTick: function() {
-    console.log('Job executed');
-  },
-  start: true,
-  timeZone: 'Europe/Copenhagen'
-});
+// var job1 = new cron.CronJob({
+  // cronTime: '0 * * * * 0,1,2', //every min '0 * * * * *'
+  // onTick: function() {
+    // console.log('Job executed');
+  // },
+  // start: true,
+  // timeZone: 'Europe/Copenhagen'
+// });
 
 
 exports.findAll = function(req, res){
@@ -66,7 +66,7 @@ exports.update = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
   delete updates._id;
-	console.log('job1 status', job1.nextDates()); // job1 status undefined
+	console.log('job1 status', wateringSchedule.nextDates()); // job1 status undefined
   Sensor.update({"_id":id}, updates,
     function (err, numberAffected) {
       if (err) return console.log(err);
