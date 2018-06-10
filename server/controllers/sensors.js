@@ -80,9 +80,9 @@ exports.update = function(req, res) {
 			wateringSchedule.setTime(new cron.CronTime(cronQuery));
 			console.log('job1 status', cronQuery);
 			console.log('job1 status', wateringSchedule.nextDates());
-			console.log('job1 status: ', wateringSchedule.running);
 			if(!wateringSchedule.running){
 				wateringSchedule.start();
+				console.log('job1 status: ', wateringSchedule.running);
 			}
 	  }
       console.log('Updated %d Sensor', numberAffected);
