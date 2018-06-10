@@ -71,7 +71,7 @@ exports.update = function(req, res) {
     function (err, numberAffected) {
       if (err) return console.log(err);
 	  if(updates.WateringTime && updates.WateringDays){
-			var date = new date(updates.WateringTime);
+			var date = new Date(updates.WateringTime);
 			var hour = date.getHours();
 			var mins = date.getMinutes();
 			var days = updates.WateringDays.join(',');
