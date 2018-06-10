@@ -30,7 +30,7 @@ var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
 			console.log('THE JOB STOPPED');
 		  },
 		  true, /* Start the job right now */
-		  timeZone: 'Europe/Copenhagen'
+		  'Europe/Copenhagen'
 		);
 	}
   });
