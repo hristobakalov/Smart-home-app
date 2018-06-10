@@ -14,15 +14,23 @@ var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
 		var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
 		console.log(cronQuery);
 		console.log(Date.now());
-		wateringSchedule = new cron.CronJob({
+		// wateringSchedule = new cron.CronJob({
 			
-		  cronTime: cronQuery, //every min '0 * * * * *'
-		  onTick: function() {
-			console.log('Job executed');
+		  // cronTime: cronQuery, //every min '0 * * * * *'
+		  // onTick: function() {
+			// console.log('Job executed');
+		  // },
+		  // start: true,
+		  // timeZone: 'Europe/Copenhagen'
+		// });
+		wateringSchedule = new CronJob(cronQuery, function() {
+		  console.log('Job WAS EXECUTRED');
+		  }, function () {
+			console.log('THE JOB STOPPED');
 		  },
-		  start: true,
+		  true, /* Start the job right now */
 		  timeZone: 'Europe/Copenhagen'
-		});
+		);
 	}
   });
 // var job1 = new cron.CronJob({
