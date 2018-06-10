@@ -213,6 +213,10 @@ export default class SensorList extends Component {
 		
 		var sensor = this.state.sensorIdDateTime;
 		console.log('Locale date ', sensor.WateringTime);
+		
+		// var hourOffset = 4 ; //for some reason there is +4 hours offset;
+		// var newDate = new Date(date);
+		// newDate = date.setTime(date.getTime() - (hourOffset*60*60*1000));
 		sensor.WateringTime = date;
 		SensorApi.update(sensor._id, sensor, this.state.userData.token, this.state.userData.user.Email);
 		this.setState({dateTime: date});

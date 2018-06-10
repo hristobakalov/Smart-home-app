@@ -12,6 +12,8 @@ var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
 		var mins = result.WateringTime.getMinutes();
 		var days = result.WateringDays.join(',');
 		var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
+		console.log(cronQuery);
+		console.log(Date.now());
 		wateringSchedule = new cron.CronJob({
 			
 		  cronTime: cronQuery, //every min '0 * * * * *'
@@ -66,7 +68,6 @@ exports.update = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
   delete updates._id;
-	console.log('job1 status', wateringSchedule.nextDates()); // job1 status undefined
   Sensor.update({"_id":id}, updates,
     function (err, numberAffected) {
       if (err) return console.log(err);
@@ -78,6 +79,7 @@ exports.update = function(req, res) {
 			var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
 			wateringSchedule.setTime(new cron.CronTime(cronQuery));
 			console.log('job1 status', wateringSchedule.nextDates());
+			console.log('job1 status: ', wateringSchedule.running);
 	  }
       console.log('Updated %d Sensor', numberAffected);
       res.send(202);
