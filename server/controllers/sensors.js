@@ -5,7 +5,7 @@ var arduino = require('../utils/arduino');
 var connection = mongoose.createConnection(constants.DBUrl);
 var cron = require('cron');
 var job1 = new cron.CronJob({
-  cronTime: '0 * * * * *', //every min
+  cronTime: '0 * * * * 1,2,3,6', //every min '0 * * * * *'
   onTick: function() {
     console.log('Job executed');
   },
