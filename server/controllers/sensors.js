@@ -3,6 +3,15 @@ var constants = require('../constants');
 var helpers = require('../utils');
 var arduino = require('../utils/arduino');
 var connection = mongoose.createConnection(constants.DBUrl);
+var cron = require('cron');
+var job1 = new cron.CronJob({
+  cronTime: '0 * * * * *', //every min
+  onTick: function() {
+    console.log('Job executed');
+  },
+  start: true,
+  timeZone: 'Europe/Copenhagen'
+});
 
 Sensor = connection.model('Sensor');
 exports.findAll = function(req, res){
@@ -38,7 +47,7 @@ exports.update = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
   delete updates._id;
-
+	console.log('job1 status', job1.running); // job1 status undefined
   Sensor.update({"_id":id}, updates,
     function (err, numberAffected) {
       if (err) return console.log(err);
