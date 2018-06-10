@@ -11,6 +11,7 @@ var SensorSchema = new Schema({
   Ip: String,
   WateringDays: [{type: String}],
   WateringTime: Date,
+  Duration: Number
 });
 
 mongoose.model('Sensor', SensorSchema);

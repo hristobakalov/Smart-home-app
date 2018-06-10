@@ -185,6 +185,9 @@ export default class SensorList extends Component {
 		}
 		catch(err){
 			console.log(err);
+			this.setState({isDataLoaded: true});
+			this.setState({isRefreshing: false});
+			ToastAndroid.show('There is an error with fetching data', ToastAndroid.SHORT);
 		}
 	}
 
