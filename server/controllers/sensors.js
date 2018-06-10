@@ -78,8 +78,12 @@ exports.update = function(req, res) {
 			var days = updates.WateringDays.join(',');
 			var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
 			wateringSchedule.setTime(new cron.CronTime(cronQuery));
+			console.log('job1 status', cronQuery);
 			console.log('job1 status', wateringSchedule.nextDates());
 			console.log('job1 status: ', wateringSchedule.running);
+			if(!wateringSchedule.running){
+				wateringSchedule.start();
+			}
 	  }
       console.log('Updated %d Sensor', numberAffected);
       res.send(202);
