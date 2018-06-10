@@ -5,7 +5,7 @@ var arduino = require('../utils/arduino');
 var connection = mongoose.createConnection(constants.DBUrl);
 var cron = require('cron');
 var job1 = new cron.CronJob({
-  cronTime: '0 * * * * 1,2,3,6', //every min '0 * * * * *'
+  cronTime: '0 * * * * 0,1,2', //every min '0 * * * * *'
   onTick: function() {
     console.log('Job executed');
   },
@@ -47,7 +47,7 @@ exports.update = function(req, res) {
   var id = req.params.id;
   var updates = req.body;
   delete updates._id;
-	console.log('job1 status', job1.running); // job1 status undefined
+	console.log('job1 status', job1.nextDates()); // job1 status undefined
   Sensor.update({"_id":id}, updates,
     function (err, numberAffected) {
       if (err) return console.log(err);
