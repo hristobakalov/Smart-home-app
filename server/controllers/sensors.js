@@ -87,6 +87,9 @@ exports.update = function(req, res) {
 			var days = updates.WateringDays.join(',');
 			var cronQuery = '00 ' + mins + ' ' + hour + ' * * 0-6';
 			wateringSchedule.setTime(new cron.CronTime(cronQuery));
+			wateringSchedule.addCallback(function() {
+				console.log('Job WAS EXECUTED2');
+			});
 			console.log('job1 status', cronQuery);
 			console.log('job1 status', wateringSchedule.nextDates());
 			if(!wateringSchedule.running){
