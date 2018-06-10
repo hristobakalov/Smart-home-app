@@ -70,6 +70,15 @@ exports.update = function(req, res) {
   Sensor.update({"_id":id}, updates,
     function (err, numberAffected) {
       if (err) return console.log(err);
+	  if(updates.WateringTime && updates.WateringDays){
+			var date = new date(updates.WateringTime);
+			var hour = date.getHours();
+			var mins = date.getMinutes();
+			var days = updates.WateringDays.join(',');
+			var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
+			wateringSchedule.setTime(cronQuery);
+			console.log('job1 status', wateringSchedule.nextDates().join(' ;'));
+	  }
       console.log('Updated %d Sensor', numberAffected);
       res.send(202);
   });
