@@ -7,11 +7,12 @@ var cron = require('cron');
 var wateringSchedule = new Object();
 var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
     if(result){
+		var hour = result.WateringTime.getHours();
+		var mins = result.WateringTime.getMinutes();
+		var days = result.WateringDays.join(',');
+		var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
 		wateringSchedule = new cron.CronJob({
-			var hour = result.WateringTime.getHours();
-			var mins = result.WateringTime.getMinutes();
-			var days = result.WateringDays.join(',');
-			var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
+			
 		  cronTime: cronQuery, //every min '0 * * * * *'
 		  onTick: function() {
 			console.log('Job executed');
