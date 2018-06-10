@@ -86,7 +86,11 @@ var apiSensor = {
 	},
 	waterPlant(sensor , token, username){
 	console.log("Water plant API called");
-		return fetch(sensorsApiUrl + 'waterPlant/5/' + sensor._id, {
+	var duration = 5;
+	if(sensor.Duration){
+		duration = sensor.Duration;
+	}
+		return fetch(sensorsApiUrl + 'waterPlant/'+ duration + '/' + sensor._id, {
 			method: "GET",
 			headers: {
 				'Accept': 'application/json',
