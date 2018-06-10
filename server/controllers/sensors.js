@@ -4,6 +4,23 @@ var helpers = require('../utils');
 var arduino = require('../utils/arduino');
 var connection = mongoose.createConnection(constants.DBUrl);
 var cron = require('cron');
+var wateringSchedule = new Object();
+var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
+    if(result){
+		wateringSchedule = new cron.CronJob({
+			var hour = result.WateringTime.getHours();
+			var mins = result.WateringTime.getMinutes();
+			var days = result.WateringDays.join(',');
+			var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
+		  cronTime: cronQuery, //every min '0 * * * * *'
+		  onTick: function() {
+			console.log('Job executed');
+		  },
+		  start: true,
+		  timeZone: 'Europe/Copenhagen'
+		});
+	}
+  });
 var job1 = new cron.CronJob({
   cronTime: '0 * * * * 0,1,2', //every min '0 * * * * *'
   onTick: function() {
