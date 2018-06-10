@@ -4,6 +4,7 @@ var helpers = require('../utils');
 var arduino = require('../utils/arduino');
 var connection = mongoose.createConnection(constants.DBUrl);
 var cron = require('cron');
+Sensor = connection.model('Sensor');
 var wateringSchedule = new Object();
 var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
     if(result){
@@ -31,7 +32,7 @@ var job1 = new cron.CronJob({
   timeZone: 'Europe/Copenhagen'
 });
 
-Sensor = connection.model('Sensor');
+
 exports.findAll = function(req, res){
   Sensor.find({},function(err, results) {
     return res.send(results);
