@@ -86,19 +86,18 @@ exports.update = function(req, res) {
 			var mins = date.getMinutes();
 			var days = updates.WateringDays.join(',');
 			var cronQuery = '00 ' + mins + ' ' + hour + ' * * 0-6';
-			wateringSchedule.stop();
-				wateringSchedule = new CronJob(cronQuery, function() {
-				  console.log('Job WAS EXECUTED');
-				  }, function () {
-					console.log('THE JOB STOPPED');
-				  },
-				  true, /* Start the job right now */
-				  'Europe/Copenhagen'
-				);
-			wateringSchedule.setTime(new cron.CronTime(cronQuery));
-			wateringSchedule.addCallback(function() {
-				console.log('Job WAS EXECUTED2');
-			});
+			wateringSchedule = new CronJob(cronQuery, function() {
+			  console.log('Job WAS EXECUTED');
+			  }, function () {
+				console.log('THE JOB STOPPED');
+			  },
+			  true, /* Start the job right now */
+			  'Europe/Copenhagen'
+			);
+			// wateringSchedule.setTime(new cron.CronTime(cronQuery));
+			// wateringSchedule.addCallback(function() {
+				// console.log('Job WAS EXECUTED2');
+			// });
 			console.log('job1 status', cronQuery);
 			console.log('job1 status', wateringSchedule.nextDates());
 			if(!wateringSchedule.running){
