@@ -35,7 +35,7 @@ export default class SensorList extends Component {
 			shouldRefresh: false,
 			userData: {},
 			isUserAdministrator: false,
-			days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+			days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 			isDateTimePickerVisible: false,
 			sensorIdDateTime: "",
 			dateTime: new Date(),
@@ -112,6 +112,16 @@ export default class SensorList extends Component {
 			  RelationApi.getSensorsByRoleId(loginData.user.Role , loginData.token, loginData.user.Email).then((res) => {
 					//console.log(res);
 					this.setState({sensors: res})
+					var self = this;
+					res.find(function(element) {
+						if(element.Type == "plant")
+						{
+							self.getTemperature(element._id);
+							var newDate = new Date(element.WateringTime);
+							var newDate = newDate.setTime(newDate.getTime() + (4*60*60*1000));
+							self.setState({dateTime: newDate});
+						}
+					});
 				});
 			  // SensorApi.getAll(loginData.token, loginData.user.Email).then((res) => {
 				// this.setState({sensors: res})
@@ -124,7 +134,7 @@ export default class SensorList extends Component {
 		  console.log("something blew up");
 		}
 		
-		this.getTemperature();
+		
 		
 		//this.getSoilMoisture();
 		 // let value = await AsyncStorage.getItem('loginData', (err, result)=>{
@@ -170,7 +180,7 @@ export default class SensorList extends Component {
 				this.setState({temperature: res.Temperature.substring(0,2)});
 				this.setState({humidity: res.Humidity.substring(0,2)});
 				SensorApi.getSoilMoisture(id, userData.token, userData.user.Email).then((res) => {
-					console.log(res);
+					//console.log(res);
 					var min = 150;
 					var max = 700;
 					var value = parseInt(res.Moisture);
@@ -182,6 +192,7 @@ export default class SensorList extends Component {
 					this.setState({isDataLoaded: true});
 					this.setState({isRefreshing: false});
 					this.forceUpdate();
+					console.log('I REACHER THIS POINT');
 				});
 			});
 		}
@@ -213,14 +224,14 @@ export default class SensorList extends Component {
 		
 		var sensor = this.state.sensorIdDateTime;
 		console.log('Locale date ', sensor.WateringTime);
-		
-		// var hourOffset = 4 ; //for some reason there is +4 hours offset;
-		// var newDate = new Date(date);
-		// newDate = date.setTime(date.getTime() - (hourOffset*60*60*1000));
-		sensor.WateringTime = date;
-		SensorApi.update(sensor._id, sensor, this.state.userData.token, this.state.userData.user.Email);
 		this.setState({dateTime: date});
+		var hourOffset = 4 ; //for some reason there is +4 hours offset;
+		var newDate = new Date(date);
+		newDate = date.setTime(date.getTime() - (hourOffset*60*60*1000));
+		sensor.WateringTime = newDate;
+		SensorApi.update(sensor._id, sensor, this.state.userData.token, this.state.userData.user.Email);
 		
+		newDate = date.setTime(date.getTime() + (hourOffset*60*60*1000));
 		this._hideDateTimePicker();
 		this.forceUpdate();
 	};
@@ -249,7 +260,13 @@ export default class SensorList extends Component {
 		this.setState({isDataLoaded: false});
 		this.setState({isRefreshing: true});
 		this._loadInitialState();
-		this.getTemperature();
+		var self = this;
+		this.state.sensors.find(function(element) {
+			if(element.Type == "plant")
+			{
+				self.getTemperature(element._id);
+			}
+		});
 		
     }
 	_onLongPressButton = (button) => {
@@ -372,7 +389,7 @@ export default class SensorList extends Component {
 										source={require('../../images/clock.png')}
 									/>
 									
-									<Text style={styles.input}>{new Date(item.WateringTime).toLocaleTimeString('en-US').split(' ')[0]}</Text>
+									<Text style={styles.input}>{new Date(this.state.dateTime).toLocaleTimeString('dk-DK').split(' ')[0]}</Text>
 									
 								</TouchableOpacity>
 								<TouchableOpacity

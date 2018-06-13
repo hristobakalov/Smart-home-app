@@ -26,6 +26,13 @@ var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
 		// });
 		wateringSchedule = new CronJob(cronQuery, function() {
 		  console.log('Job WAS EXECUTED');
+		  arduino.waterPlant(result.Ip, result.PinNumber, result.Duration, function(data, err){
+				  if(err){
+					 return res.sendStatus(500);
+				 }
+				 console.log(data);
+				 return res.send(data);
+				});
 		  }, function () {
 			console.log('THE JOB STOPPED');
 		  },
@@ -85,12 +92,19 @@ exports.update = function(req, res) {
 			var hour = date.getHours();
 			var mins = date.getMinutes();
 			var days = updates.WateringDays.join(',');
-			var cronQuery = '00 ' + mins + ' ' + hour + ' * * 0-6';
+			var cronQuery = '00 ' + mins + ' ' + hour + ' * * ' + days;
 			wateringSchedule = new CronJob(cronQuery, function() {
 			  console.log('Job WAS EXECUTED');
-			  }, function () {
+			   arduino.waterPlant(updates.Ip, updates.PinNumber, updates.Duration, function(data, err){
+				  if(err){
+					 return res.sendStatus(500);
+				 }
+				 console.log(data);
+				 return res.send(data);
+				});
+			}, function () {
 				console.log('THE JOB STOPPED');
-			  },
+			},
 			  true, /* Start the job right now */
 			  'Europe/Copenhagen'
 			);

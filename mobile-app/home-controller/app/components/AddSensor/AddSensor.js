@@ -48,6 +48,8 @@ export default class AddSensor extends Component {
 		console.log(sensor);
 		sensor.IsEnabled = false;
 		sensor.PinNameNumber = sensor.PinNumber;
+		sensor.Duration = 0;
+		sensor.WateringTime = new Date();
 		var userData = this.state.userData;
 		
 		SensorApi.add(sensor, userData.token, userData.user.Email)
@@ -147,6 +149,7 @@ export default class AddSensor extends Component {
 			return;
 		}
 		const sensor = this.state.sensor;
+		
 		sensor.Ip = value;
 		// re-render
 		this.forceUpdate();
