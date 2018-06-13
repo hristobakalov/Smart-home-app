@@ -28,10 +28,10 @@ var sensor = Sensor.findOne({'Type':"plant"},function(err, result) {
 		  console.log('Job WAS EXECUTED');
 		  arduino.waterPlant(result.Ip, result.PinNumber, result.Duration, function(data, err){
 				  if(err){
-					 return res.sendStatus(500);
+					  console.log(err);
+					 return;
 				 }
 				 console.log(data);
-				 return res.send(data);
 				});
 		  }, function () {
 			console.log('THE JOB STOPPED');
@@ -97,10 +97,10 @@ exports.update = function(req, res) {
 			  console.log('Job WAS EXECUTED');
 			   arduino.waterPlant(updates.Ip, updates.PinNumber, updates.Duration, function(data, err){
 				  if(err){
-					 return res.sendStatus(500);
+					  console.log(err);
+					 return;
 				 }
 				 console.log(data);
-				 return res.send(data);
 				});
 			}, function () {
 				console.log('THE JOB STOPPED');
