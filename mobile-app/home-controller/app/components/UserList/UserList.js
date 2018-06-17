@@ -114,7 +114,7 @@ export default class UserList extends Component {
 						<Text style={this.state.userData.user._id == item._id ? styles.textBold : styles.text}>{item.FirstName} {item.LastName}
 						</Text>
 						<Image
-							style={styles.pensil}
+							style={this.state.isUserAdministrator || this.state.userData.user._id == item._id  ? styles.pensil : styles.hidden}
 							source={require('../../images/pensil.png')}
 						/>
 						<TouchableOpacity

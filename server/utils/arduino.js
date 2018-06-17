@@ -3,9 +3,9 @@ const http = require('http');
 module.exports={
 	getTemperature: function (ip, pin, callback) {
 		console.log("Getting temperature: ", ip);
-		// if(!ip){
-			ip = '192.168.0.199';
-		//}
+		if(!ip){
+			ip = '192.168.1.199';
+		}
 		var url = 'http://' + ip + constants.ArduinoGetTemperatureRoute;
 		http.get(url, (resp) => {
 		  var data = '';
@@ -29,9 +29,9 @@ module.exports={
 	
 	getSoilMoisture: function (ip, pin, callback) {
 		console.log("Getting SoilMoisture: ", ip);
-		// if(!ip){
-			ip = '192.168.0.199';
-		//}
+		if(!ip){
+			ip = '192.168.1.199';
+		}
 		var url = 'http://' + ip + constants.ArduinoGetSoilMoistureRoute;
 		http.get(url, (resp) => {
 		  var data = '';
@@ -55,9 +55,9 @@ module.exports={
 	
 	waterPlant: function (ip, pin, duration, callback) {
 		console.log("Watering plant: ", ip);
-		// if(!ip){
-			ip = '192.168.0.199';
-		//}
+		if(!ip){
+			ip = '192.168.1.199';
+		}
 		var url = 'http://' + ip + constants.ArduinoWaterPlantRoute + duration;
 		http.get(url, (resp) => {
 		  var data = '';
