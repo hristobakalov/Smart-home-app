@@ -311,11 +311,11 @@ export default class SensorList extends Component {
 					<View style = {styles.row}>
 						<Image
 								style={item.Type == "plant" ? styles.icon : styles.hidden}
-								source={require('../../images/plant.png')}
+								source={require('../../images/plant-origin.png')}
 						/>
 						<Image
 								style={item.Type == "led" || item.Type == undefined ? styles.icon : styles.hidden}
-								source={require('../../images/light.png')}
+								source={require('../../images/light-origin.png')}
 						/>
 						<Text style={item.Type == "plant" ? styles.plantText : styles.text}>{item.Name}
 						</Text>
@@ -354,8 +354,8 @@ export default class SensorList extends Component {
 								underlayColor ='#3498db'
 							>
 								<Image
-									style={styles.trash}
-									source={require('../../images/down2.png')}
+									style={styles.downarrow}
+									source={require('../../images/down-origin.png')}
 								/>
 							</TouchableOpacity>
 						}
@@ -386,7 +386,7 @@ export default class SensorList extends Component {
 									onLongPress={() => {this._onLongPressButton("clock")}}>
 									<Image
 										style={styles.clockImage}
-										source={require('../../images/clock.png')}
+										source={require('../../images/clock-origin.png')}
 									/>
 									
 									<Text style={styles.input}>{new Date(this.state.dateTime).toLocaleTimeString('dk-DK').split(' ')[0]}</Text>
@@ -425,7 +425,7 @@ export default class SensorList extends Component {
 								onLongPress={() => {this._onLongPressButton("temperature")}}>
 								<Image
 									style={styles.clockImage}
-									source={require('../../images/temperature.png')}
+									source={require('../../images/temperature-origin.png')}
 								/>
 								<Text style={styles.input}>{this.state.temperature}°C</Text>
 							</TouchableOpacity>
@@ -434,7 +434,7 @@ export default class SensorList extends Component {
 								onLongPress={() => {this._onLongPressButton("humidity")}}>
 								<Image
 									style={styles.clockImage}
-									source={require('../../images/moisture2.png')}
+									source={require('../../images/moisture-origin.png')}
 								/>
 								<Text style={styles.input}>{this.state.humidity}%</Text>
 							</TouchableOpacity>
@@ -443,7 +443,7 @@ export default class SensorList extends Component {
 								onLongPress={() => {this._onLongPressButton("soilMoisture")}}>
 								<Image
 									style={styles.clockImage}
-									source={require('../../images/plant-moisture.png')}
+									source={require('../../images/plant-moisture-origin.png')}
 								/>
 								<Text style={styles.input}>{this.state.soilMoisture}%</Text>
 							</TouchableOpacity>
@@ -514,6 +514,12 @@ const styles = StyleSheet.create ({
 	   alignItems: 'flex-end',
 	   width:30,
 	   height:30
+    },
+	downarrow:{
+	   marginTop: 5,
+	   alignItems: 'flex-end',
+	   width:20,
+	   height:20
     },
     icon:{
 	   width:30,
